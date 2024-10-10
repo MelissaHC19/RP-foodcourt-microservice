@@ -1,9 +1,11 @@
 package com.prgama.foodcourt_microservice.application.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDate;
 
+@AllArgsConstructor
 @Getter
 public class GetUserRequest {
     private Long id;
