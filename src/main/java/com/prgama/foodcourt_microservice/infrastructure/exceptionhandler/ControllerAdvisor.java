@@ -1,10 +1,8 @@
 package com.prgama.foodcourt_microservice.infrastructure.exceptionhandler;
 
-import com.prgama.foodcourt_microservice.domain.exception.EmptyOrNullFieldsException;
-import com.prgama.foodcourt_microservice.domain.exception.InvalidNameException;
-import com.prgama.foodcourt_microservice.domain.exception.InvalidNitException;
-import com.prgama.foodcourt_microservice.domain.exception.InvalidPhoneNumberException;
+import com.prgama.foodcourt_microservice.domain.exception.*;
 import com.prgama.foodcourt_microservice.infrastructure.constants.ControllerConstants;
+import feign.FeignException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -40,6 +38,24 @@ public class ControllerAdvisor {
     public ResponseEntity<ExceptionResponse> handleEmptyOrNullFieldsException(EmptyOrNullFieldsException exception) {
         ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now());
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(NotOwnerException.class)
+    public ResponseEntity<ExceptionResponse> handleNotOwnerException(NotOwnerException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now());
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleUserNotFoundException(UserNotFoundException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.NOT_FOUND.toString(), LocalDateTime.now());
+        return ResponseEntity.status(404).body(response);
+    }
+
+    @ExceptionHandler(FeignException.NotFound.class)
+    public ResponseEntity<ExceptionResponse> handleBadRequestFeignClient(FeignException.NotFound exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage().split(ControllerConstants.EXTRACT_ERROR_MESSAGE_START)[1].split(ControllerConstants.EXTRACT_ERROR_MESSAGE_END)[0], HttpStatus.NOT_FOUND.toString(), LocalDateTime.now());
+        return ResponseEntity.status(404).body(response);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

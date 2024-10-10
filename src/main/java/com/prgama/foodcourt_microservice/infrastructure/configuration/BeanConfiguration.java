@@ -1,6 +1,7 @@
 package com.prgama.foodcourt_microservice.infrastructure.configuration;
 
 import com.prgama.foodcourt_microservice.domain.api.IRestaurantServicePort;
+import com.prgama.foodcourt_microservice.domain.api.IUserServicePort;
 import com.prgama.foodcourt_microservice.domain.spi.IRestaurantPersistencePort;
 import com.prgama.foodcourt_microservice.domain.usecase.RestaurantUseCase;
 import com.prgama.foodcourt_microservice.infrastructure.output.jpa.adapter.RestaurantJpaAdapter;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfiguration {
     private final IRestaurantEntityMapper restaurantEntityMapper;
     private final IRestaurantRepository restaurantRepository;
+    private final IUserServicePort userServicePort;
 
     @Bean
     public IRestaurantPersistencePort restaurantPersistencePort() {
@@ -23,6 +25,6 @@ public class BeanConfiguration {
 
     @Bean
     public IRestaurantServicePort restaurantServicePort() {
-        return new RestaurantUseCase(restaurantPersistencePort());
+        return new RestaurantUseCase(restaurantPersistencePort(), userServicePort);
     }
 }

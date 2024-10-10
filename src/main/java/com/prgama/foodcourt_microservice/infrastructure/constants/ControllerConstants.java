@@ -8,4 +8,6 @@ public class ControllerConstants {
     public static final String TIMESTAMP = "timestamp";
     public static final String ERRORS = "errors";
     public static final String RESTAURANT_CREATED_MESSAGE = "Restaurant created successfully";
+    public static final String EXTRACT_ERROR_MESSAGE_START = "\"message\":\"";
+    public static final String EXTRACT_ERROR_MESSAGE_END = "\",";
 }
