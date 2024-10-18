@@ -16,30 +16,6 @@ import java.util.Map;
 
 @ControllerAdvice
 public class ControllerAdvisor {
-    @ExceptionHandler(InvalidNameException.class)
-    public ResponseEntity<ExceptionResponse> handleInvalidNameException(InvalidNameException exception) {
-        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now());
-        return ResponseEntity.badRequest().body(response);
-    }
-
-    @ExceptionHandler(InvalidNitException.class)
-    public ResponseEntity<ExceptionResponse> handleInvalidNitException(InvalidNitException exception) {
-        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now());
-        return ResponseEntity.badRequest().body(response);
-    }
-
-    @ExceptionHandler(InvalidPhoneNumberException.class)
-    public ResponseEntity<ExceptionResponse> handleInvalidPhoneNumberException(InvalidPhoneNumberException exception) {
-        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now());
-        return ResponseEntity.badRequest().body(response);
-    }
-
-    @ExceptionHandler(EmptyOrNullFieldsException.class)
-    public ResponseEntity<ExceptionResponse> handleEmptyOrNullFieldsException(EmptyOrNullFieldsException exception) {
-        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now());
-        return ResponseEntity.badRequest().body(response);
-    }
-
     @ExceptionHandler(NotOwnerException.class)
     public ResponseEntity<ExceptionResponse> handleNotOwnerException(NotOwnerException exception) {
         ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now());
