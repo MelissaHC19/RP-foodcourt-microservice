@@ -17,6 +17,12 @@ import java.util.Map;
 
 @ControllerAdvice
 public class ControllerAdvisor {
+    @ExceptionHandler(AlreadyExistsByNitException.class)
+    public ResponseEntity<ExceptionResponse> handleAlreadyExistsByNitException(AlreadyExistsByNitException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.CONFLICT.toString(), LocalDateTime.now());
+        return ResponseEntity.status(409).body(response);
+    }
+
     @ExceptionHandler(NotOwnerException.class)
     public ResponseEntity<ExceptionResponse> handleNotOwnerException(NotOwnerException exception) {
         ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now());

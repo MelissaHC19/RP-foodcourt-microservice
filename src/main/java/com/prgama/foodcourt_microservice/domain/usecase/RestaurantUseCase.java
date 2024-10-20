@@ -18,8 +18,15 @@ public class RestaurantUseCase implements IRestaurantServicePort {
 
     @Override
     public void createRestaurant(Restaurant restaurant) {
+        validateRestaurant(restaurant);
         validateOwner(restaurant);
         restaurantPersistencePort.createRestaurant(restaurant);
+    }
+
+    private void validateRestaurant(Restaurant restaurant) {
+        if (restaurantPersistencePort.alreadyExistsByNit(restaurant.getNit())) {
+            throw new AlreadyExistsByNitException(ExceptionConstants.ALREADY_EXISTS_BY_NIT_MESSAGE);
+        }
     }
 
     private void validateOwner(Restaurant restaurant) {

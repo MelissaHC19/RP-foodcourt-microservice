@@ -5,6 +5,7 @@ public class ExceptionConstants {
         throw new IllegalStateException("Utility class");
     }
 
+    public static final String ALREADY_EXISTS_BY_NIT_MESSAGE = "Restaurant already exists by nit.";
     public static final String NOT_OWNER_MESSAGE = "User isn't an owner.";
     public static final String ALREADY_EXISTS_BY_NAME_MESSAGE = "Dish already exists by name.";
     public static final String RESTAURANT_NOT_FOUND_MESSAGE = "Restaurant not found or doesn't exists.";
