@@ -23,6 +23,24 @@ public class ControllerAdvisor {
         return ResponseEntity.badRequest().body(response);
     }
 
+    @ExceptionHandler(AlreadyExistsByNameException.class)
+    public ResponseEntity<ExceptionResponse> handleAlreadyExistsByNameException(AlreadyExistsByNameException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.CONFLICT.toString(), LocalDateTime.now());
+        return ResponseEntity.status(409).body(response);
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleCategoryNotFoundException(CategoryNotFoundException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.NOT_FOUND.toString(), LocalDateTime.now());
+        return ResponseEntity.status(404).body(response);
+    }
+
+    @ExceptionHandler(RestaurantNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleRestaurantNotFoundException(RestaurantNotFoundException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.NOT_FOUND.toString(), LocalDateTime.now());
+        return ResponseEntity.status(404).body(response);
+    }
+
     @ExceptionHandler(FeignException.NotFound.class)
     public ResponseEntity<ExceptionResponse> handleBadRequestFeignClient(FeignException.NotFound exception) {
         ExceptionResponse response = new ExceptionResponse(exception.getMessage().split(ControllerConstants.EXTRACT_ERROR_MESSAGE_START)[1].split(ControllerConstants.EXTRACT_ERROR_MESSAGE_END)[0], HttpStatus.NOT_FOUND.toString(), LocalDateTime.now());
