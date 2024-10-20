@@ -40,6 +40,9 @@ public class RestaurantRestControllerAdapter {
             @ApiResponse(responseCode = DocumentationConstants.NOT_FOUND_STATUS_CODE,
                     description = DocumentationConstants.NOT_FOUND_RESPONSE_CODE_DESCRIPTION,
                     content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.CONFLICT_STATUS_CODE,
+                    description = DocumentationConstants.CONFLICT_RESPONSE_CODE_DESCRIPTION,
+                    content = @Content),
     })
     @PostMapping("/create")
     public ResponseEntity<ControllerResponse> createRestaurant(@Valid @RequestBody CreateRestaurantRequest request) {

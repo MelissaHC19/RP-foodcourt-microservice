@@ -22,6 +22,7 @@ public class DocumentationConstants {
     public static final String CREATED_RESPONSE_CODE_DESCRIPTION = "Restaurant created successfully.";
     public static final String BAD_REQUEST_RESPONSE_CODE_DESCRIPTION = "Restaurant not created or user doesn't have owner role.";
     public static final String NOT_FOUND_RESPONSE_CODE_DESCRIPTION = "User not found with the provided id.";
+    public static final String CONFLICT_RESPONSE_CODE_DESCRIPTION = "Restaurant already exists.";
 
     public static final String CREATED_RESPONSE_CODE_DESCRIPTION_DISH = "Dish created successfully.";
     public static final String BAD_REQUEST_RESPONSE_CODE_DESCRIPTION_DISH = "Dish not created.";
