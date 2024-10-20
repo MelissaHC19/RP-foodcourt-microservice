@@ -1,5 +1,6 @@
 package com.prgama.foodcourt_microservice.infrastructure.documentation;
 
+import com.prgama.foodcourt_microservice.infrastructure.constants.OpenApiConstants;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -14,10 +15,10 @@ public class OpenApiConfiguration {
         return new OpenAPI()
                 .components(new Components())
                 .info(new Info()
-                        .title("Food Court Microservice")
-                        .version("v1.0.0")
-                        .description("Food Court Microservice")
-                        .termsOfService("http://swagger.io/terms/")
-                        .license(new License().name("Apache 2.0").url("http://springdoc.org")));
+                        .title(OpenApiConstants.OPEN_API_TITLE)
+                        .version(OpenApiConstants.OPEN_API_VERSION)
+                        .description(OpenApiConstants.OPEN_API_DESCRIPTION)
+                        .termsOfService(OpenApiConstants.OPEN_API_TERMS_OF_SERVICE)
+                        .license(new License().name(OpenApiConstants.OPEN_API_LICENSE_NAME).url(OpenApiConstants.OPEN_API_LICENSE_URL)));
     }
 }
