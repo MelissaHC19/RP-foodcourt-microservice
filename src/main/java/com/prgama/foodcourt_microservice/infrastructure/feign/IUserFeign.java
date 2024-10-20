@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "users-microservice", url = "localhost:8080/user")
+@FeignClient(name = "users-microservice", url = "localhost:8080/user/owner")
 public interface IUserFeign {
     @GetMapping("/{id}")
     GetUserRequest getUserById(@PathVariable Long id);
