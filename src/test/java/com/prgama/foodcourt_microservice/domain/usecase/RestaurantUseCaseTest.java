@@ -38,6 +38,19 @@ class RestaurantUseCaseTest {
     }
 
     @Test
+    @DisplayName("Validation exception when restaurant already exists by nit")
+    void createRestaurantShouldThrowValidationExceptionWhenAlreadyExistsByNit() {
+        Restaurant restaurant = new Restaurant(1L, "Frisby", "123456789", "Parque Arboleda Piso 4",
+                "+573233039679", "https://logo.url", 1L);
+        Mockito.when(restaurantPersistencePort.alreadyExistsByNit("123456789")).thenReturn(true);
+        AlreadyExistsByNitException exception = assertThrows(AlreadyExistsByNitException.class, () -> {
+            restaurantUseCase.createRestaurant(restaurant);
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.ALREADY_EXISTS_BY_NIT_MESSAGE);
+        Mockito.verify(restaurantPersistencePort, Mockito.never()).createRestaurant(restaurant);
+    }
+
+    @Test
     @DisplayName("Validation exception when provided owner's id isn't an owner")
     void createRestaurantShouldThrowValidationExceptionWhenUserIsNotOwner() {
         Restaurant restaurant = new Restaurant(1L, "Frisby", "123456789", "Parque Arboleda Piso 4",
