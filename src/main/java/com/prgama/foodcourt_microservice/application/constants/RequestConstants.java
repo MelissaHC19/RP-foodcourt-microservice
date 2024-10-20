@@ -22,4 +22,15 @@ public class RequestConstants {
     public static final String URL_LOGO_MANDATORY_MESSAGE = "Logo url must be provided.";
 
     public static final String OWNER_ID_MANDATORY_MESSAGE = "Owner's id must be provided.";
+
+    public static final String DESCRIPTION_MANDATORY_MESSAGE = "Description must be provided.";
+
+    public static final String PRICE_MANDATORY_MESSAGE = "Price must be provided.";
+    public static final String POSITIVE_PRICE_MESSAGE = "Price must be greater than zero.";
+
+    public static final String URL_IMAGE_MANDATORY_MESSAGE = "Image url must be provided.";
+
+    public static final String RESTAURANT_ID_MANDATORY_MESSAGE = "Restaurant's id must be provided.";
+
+    public static final String CATEGORY_ID_MANDATORY_MESSAGE = "Category's id must be provided.";
 }
