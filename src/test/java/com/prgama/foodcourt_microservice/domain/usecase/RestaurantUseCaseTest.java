@@ -1,6 +1,5 @@
 package com.prgama.foodcourt_microservice.domain.usecase;
 
-import com.prgama.foodcourt_microservice.application.dto.request.GetUserRequest;
 import com.prgama.foodcourt_microservice.domain.api.IUserServicePort;
 import com.prgama.foodcourt_microservice.domain.constants.ExceptionConstants;
 import com.prgama.foodcourt_microservice.domain.exception.*;
@@ -13,8 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
