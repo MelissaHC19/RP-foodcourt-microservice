@@ -1,5 +1,6 @@
 package com.prgama.foodcourt_microservice.infrastructure.exceptionhandler;
 
+import com.prgama.foodcourt_microservice.application.dto.response.ExceptionResponse;
 import com.prgama.foodcourt_microservice.domain.exception.*;
 import com.prgama.foodcourt_microservice.infrastructure.constants.ControllerConstants;
 import feign.FeignException;

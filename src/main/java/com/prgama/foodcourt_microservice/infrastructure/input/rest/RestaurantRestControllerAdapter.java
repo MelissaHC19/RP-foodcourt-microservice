@@ -1,6 +1,7 @@
 package com.prgama.foodcourt_microservice.infrastructure.input.rest;
 
 import com.prgama.foodcourt_microservice.application.dto.request.CreateRestaurantRequest;
+import com.prgama.foodcourt_microservice.application.dto.response.ControllerResponse;
 import com.prgama.foodcourt_microservice.application.handler.IRestaurantHandler;
 import com.prgama.foodcourt_microservice.infrastructure.constants.ControllerConstants;
 import com.prgama.foodcourt_microservice.infrastructure.constants.DocumentationConstants;
