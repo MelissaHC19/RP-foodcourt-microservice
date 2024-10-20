@@ -11,7 +11,8 @@ public class UserServicePortImpl implements IUserServicePort {
     private final IUserFeign userFeign;
 
     @Override
-    public GetUserRequest getUserById(Long id) {
-        return userFeign.getUserById(id);
+    public boolean getUserById(Long id) {
+        GetUserRequest userRequest = userFeign.getUserById(id);
+        return userRequest.isRoleValidation();
     }
 }
