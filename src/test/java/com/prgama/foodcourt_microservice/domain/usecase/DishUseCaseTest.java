@@ -3,6 +3,7 @@ package com.prgama.foodcourt_microservice.domain.usecase;
 import com.prgama.foodcourt_microservice.domain.constants.ExceptionConstants;
 import com.prgama.foodcourt_microservice.domain.exception.AlreadyExistsByNameException;
 import com.prgama.foodcourt_microservice.domain.exception.CategoryNotFoundException;
+import com.prgama.foodcourt_microservice.domain.exception.DishNotFoundException;
 import com.prgama.foodcourt_microservice.domain.exception.RestaurantNotFoundException;
 import com.prgama.foodcourt_microservice.domain.model.Category;
 import com.prgama.foodcourt_microservice.domain.model.Dish;
@@ -100,5 +101,73 @@ class DishUseCaseTest {
         });
         assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.CATEGORY_NOT_FOUND_MESSAGE);
         Mockito.verify(dishPersistencePort, Mockito.never()).createDish(dish);
+    }
+
+    @Test
+    @DisplayName("Modifies description and price from a dish successfully")
+    void modifyDishDescriptionAndPrice() {
+        Long dishId = 1L;
+        Dish dish = new Dish(1L, "Crispy Calamari",
+                "Lightly breaded calamari rings, served with a tangy marinara sauce.",
+                45000, "crispy-calamari.jpg",
+                new Restaurant(1L, null, null, null, null, null, null),
+                new Category(1L, null, null));
+        Mockito.when(dishPersistencePort.findById(dishId)).thenReturn(dish);
+        dishUseCase.modifyDish(dishId, "Lightly breaded calamari rings, served with a delicious marinara sauce.", 50000);
+        Mockito.verify(dishPersistencePort, Mockito.times(1)).modifyDish(dish);
+    }
+
+    @Test
+    @DisplayName("Modifies description from a dish successfully")
+    void modifyDishDescription() {
+        Long dishId = 1L;
+        Dish dish = new Dish(1L, "Crispy Calamari",
+                "Lightly breaded calamari rings, served with a tangy marinara sauce.",
+                45000, "crispy-calamari.jpg",
+                new Restaurant(1L, null, null, null, null, null, null),
+                new Category(1L, null, null));
+        Mockito.when(dishPersistencePort.findById(dishId)).thenReturn(dish);
+        dishUseCase.modifyDish(dishId, "Lightly breaded calamari rings, served with a delicious marinara sauce.", null);
+        Mockito.verify(dishPersistencePort, Mockito.times(1)).modifyDish(dish);
+    }
+
+    @Test
+    @DisplayName("Modifies price from a dish successfully")
+    void modifyDishPrice() {
+        Long dishId = 1L;
+        Dish dish = new Dish(1L, "Crispy Calamari",
+                "Lightly breaded calamari rings, served with a tangy marinara sauce.",
+                45000, "crispy-calamari.jpg",
+                new Restaurant(1L, null, null, null, null, null, null),
+                new Category(1L, null, null));
+        Mockito.when(dishPersistencePort.findById(dishId)).thenReturn(dish);
+        dishUseCase.modifyDish(dishId, null, 50000);
+        Mockito.verify(dishPersistencePort, Mockito.times(1)).modifyDish(dish);
+    }
+
+    @Test
+    @DisplayName("Shouldn't modify dish when description and price are null")
+    void modifyDishShouldNotModifyWhenDescriptionAndPriceAreNull() {
+        Long dishId = 1L;
+        Dish dish = new Dish(1L, "Crispy Calamari",
+                "Lightly breaded calamari rings, served with a tangy marinara sauce.",
+                45000, "crispy-calamari.jpg",
+                new Restaurant(1L, null, null, null, null, null, null),
+                new Category(1L, null, null));
+        Mockito.when(dishPersistencePort.findById(dishId)).thenReturn(dish);
+        dishUseCase.modifyDish(dishId, null, null);
+        Mockito.verify(dishPersistencePort, Mockito.never()).modifyDish(dish);
+    }
+
+    @Test
+    @DisplayName("Validation exception when dish doesn't exist")
+    void modifyDishShouldThrowValidationExceptionWhenDishNotFound() {
+        Long dishId = 1L;
+        Mockito.when(dishPersistencePort.findById(dishId)).thenReturn(null);
+        DishNotFoundException exception = assertThrows(DishNotFoundException.class, () -> {
+            dishUseCase.modifyDish(dishId, "Lightly breaded calamari rings, served with a delicious marinara sauce.", 50000);
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.DISH_NOT_FOUND_MESSAGE);
+        Mockito.verify(dishPersistencePort, Mockito.never()).modifyDish(null);
     }
 }

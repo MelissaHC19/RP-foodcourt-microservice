@@ -10,4 +10,5 @@ public class ExceptionConstants {
     public static final String ALREADY_EXISTS_BY_NAME_MESSAGE = "Dish already exists by name.";
     public static final String RESTAURANT_NOT_FOUND_MESSAGE = "Restaurant not found or doesn't exists.";
     public static final String CATEGORY_NOT_FOUND_MESSAGE = "Category not found or doesn't exists.";
+    public static final String DISH_NOT_FOUND_MESSAGE = "Dish not found or doesn't exists.";
 }
