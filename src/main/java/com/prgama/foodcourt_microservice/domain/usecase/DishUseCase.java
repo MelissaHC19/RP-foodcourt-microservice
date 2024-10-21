@@ -40,7 +40,9 @@ public class DishUseCase implements IDishServicePort {
         if (price != null) {
             dish.setPrice(price);
         }
-        dishPersistencePort.modifyDish(dish);
+        if (description != null || price != null) {
+            dishPersistencePort.modifyDish(dish);
+        }
     }
 
     private void validateDish(Dish dish) {
