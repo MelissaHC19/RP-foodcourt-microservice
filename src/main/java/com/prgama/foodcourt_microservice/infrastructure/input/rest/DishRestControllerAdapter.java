@@ -25,7 +25,7 @@ public class DishRestControllerAdapter {
     private final IDishHandler dishHandler;
 
     @Operation(summary = DocumentationConstants.CREATE_DISH_SUMMARY,
-            tags = {DocumentationConstants.RESTAURANT_TAG, DocumentationConstants.DISH_TAG},
+            tags = {DocumentationConstants.DISH_TAG},
             description = DocumentationConstants.CREATE_DISH_DESCRIPTION
     )
     @ApiResponses(value = {
@@ -48,6 +48,18 @@ public class DishRestControllerAdapter {
         return ResponseEntity.status(HttpStatus.CREATED).body(new ControllerResponse(ControllerConstants.DISH_CREATED_MESSAGE, HttpStatus.CREATED.toString(), LocalDateTime.now()));
     }
 
+    @Operation(summary = DocumentationConstants.UPDATE_DISH_SUMMARY,
+            tags = {DocumentationConstants.DISH_TAG},
+            description = DocumentationConstants.UPDATE_DISH_DESCRIPTION
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = DocumentationConstants.OK_STATUS_CODE,
+                    description = DocumentationConstants.OK_RESPONSE_CODE_DESCRIPTION_UPDATE_DISH,
+                    content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.NOT_FOUND_STATUS_CODE,
+                    description = DocumentationConstants.NOT_FOUND_RESPONSE_CODE_DESCRIPTION_UPDATE_DISH,
+                    content = @Content),
+    })
     @PatchMapping("/update/{id}")
     public ResponseEntity<ControllerResponse> modifyDish(@PathVariable Long id, @Valid @RequestBody ModifyDishRequest request) {
         dishHandler.modifyDish(id, request);

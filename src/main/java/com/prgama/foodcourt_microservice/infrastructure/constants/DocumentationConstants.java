@@ -11,6 +11,9 @@ public class DocumentationConstants {
     public static final String CREATE_DISH_SUMMARY = "Create dish";
     public static final String CREATE_DISH_DESCRIPTION = "This endpoint allows the creation of a new dish for a restaurant by submitting required fields: name, description, price (it must be integers greater than zero), url image, restaurant's id, and category's id.";
 
+    public static final String UPDATE_DISH_SUMMARY = "Update dish";
+    public static final String UPDATE_DISH_DESCRIPTION = "This endpoint allows the modification of an existing dish's description and price.";
+
     public static final String RESTAURANT_TAG = "Restaurant";
     public static final String DISH_TAG = "Dish";
 
@@ -18,6 +21,7 @@ public class DocumentationConstants {
     public static final String BAD_REQUEST_STATUS_CODE = "400";
     public static final String NOT_FOUND_STATUS_CODE = "404";
     public static final String CONFLICT_STATUS_CODE = "409";
+    public static final String OK_STATUS_CODE = "200";
 
     public static final String CREATED_RESPONSE_CODE_DESCRIPTION = "Restaurant created successfully.";
     public static final String BAD_REQUEST_RESPONSE_CODE_DESCRIPTION = "Restaurant not created or user doesn't have owner role.";
@@ -28,4 +32,7 @@ public class DocumentationConstants {
     public static final String BAD_REQUEST_RESPONSE_CODE_DESCRIPTION_DISH = "Dish not created.";
     public static final String NOT_FOUND_RESPONSE_CODE_DESCRIPTION_DISH = "Restaurant or category not found with the provided id's.";
     public static final String CONFLICT_RESPONSE_CODE_DESCRIPTION_DISH = "Dish already exists.";
+
+    public static final String OK_RESPONSE_CODE_DESCRIPTION_UPDATE_DISH = "Dish modified successfully.";
+    public static final String NOT_FOUND_RESPONSE_CODE_DESCRIPTION_UPDATE_DISH = "Dish not found with the provided id.";
 }
