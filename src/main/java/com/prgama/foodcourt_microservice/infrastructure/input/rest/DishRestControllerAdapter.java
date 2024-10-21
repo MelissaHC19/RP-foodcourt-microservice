@@ -1,6 +1,7 @@
 package com.prgama.foodcourt_microservice.infrastructure.input.rest;
 
 import com.prgama.foodcourt_microservice.application.dto.request.CreateDishRequest;
+import com.prgama.foodcourt_microservice.application.dto.request.ModifyDishRequest;
 import com.prgama.foodcourt_microservice.application.dto.response.ControllerResponse;
 import com.prgama.foodcourt_microservice.application.handler.IDishHandler;
 import com.prgama.foodcourt_microservice.infrastructure.constants.ControllerConstants;
@@ -13,10 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -48,5 +46,11 @@ public class DishRestControllerAdapter {
     public ResponseEntity<ControllerResponse> createDish(@Valid @RequestBody CreateDishRequest request) {
         dishHandler.createDish(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ControllerResponse(ControllerConstants.DISH_CREATED_MESSAGE, HttpStatus.CREATED.toString(), LocalDateTime.now()));
+    }
+
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<ControllerResponse> modifyDish(@PathVariable Long id, @Valid @RequestBody ModifyDishRequest request) {
+        dishHandler.modifyDish(id, request);
+        return ResponseEntity.status(HttpStatus.OK).body(new ControllerResponse(ControllerConstants.DISH_MODIFIED_MESSAGE, HttpStatus.OK.toString(), LocalDateTime.now()));
     }
 }

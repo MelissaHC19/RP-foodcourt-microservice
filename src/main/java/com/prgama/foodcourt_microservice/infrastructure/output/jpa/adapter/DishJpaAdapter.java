@@ -20,4 +20,14 @@ public class DishJpaAdapter implements IDishPersistencePort {
     public boolean alreadyExistsByName(String name) {
         return dishRepository.findByName(name).isPresent();
     }
+
+    @Override
+    public void modifyDish(Dish dish) {
+        dishRepository.save(dishEntityMapper.dishToEntity(dish));
+    }
+
+    @Override
+    public Dish findById(Long id) {
+        return dishEntityMapper.dishEntityToDish(dishRepository.findById(id).orElse(null));
+    }
 }

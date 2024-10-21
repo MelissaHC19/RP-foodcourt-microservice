@@ -4,6 +4,7 @@ import com.prgama.foodcourt_microservice.domain.api.IDishServicePort;
 import com.prgama.foodcourt_microservice.domain.constants.ExceptionConstants;
 import com.prgama.foodcourt_microservice.domain.exception.AlreadyExistsByNameException;
 import com.prgama.foodcourt_microservice.domain.exception.CategoryNotFoundException;
+import com.prgama.foodcourt_microservice.domain.exception.DishNotFoundException;
 import com.prgama.foodcourt_microservice.domain.exception.RestaurantNotFoundException;
 import com.prgama.foodcourt_microservice.domain.model.Dish;
 import com.prgama.foodcourt_microservice.domain.spi.ICategoryPersistencePort;
@@ -25,6 +26,21 @@ public class DishUseCase implements IDishServicePort {
     public void createDish(Dish dish) {
         validateDish(dish);
         dishPersistencePort.createDish(dish);
+    }
+
+    @Override
+    public void modifyDish(Long id, String description, Integer price) {
+        Dish dish = dishPersistencePort.findById(id);
+        if (dish == null) {
+            throw new DishNotFoundException(ExceptionConstants.DISH_NOT_FOUND_MESSAGE);
+        }
+        if (description != null) {
+            dish.setDescription(description);
+        }
+        if (price != null) {
+            dish.setPrice(price);
+        }
+        dishPersistencePort.modifyDish(dish);
     }
 
     private void validateDish(Dish dish) {

@@ -13,4 +13,5 @@ public class ControllerConstants {
     public static final String EXTRACT_ERROR_MESSAGE_END = "\",";
 
     public static final String DISH_CREATED_MESSAGE = "Dish created successfully.";
+    public static final String DISH_MODIFIED_MESSAGE = "Dish modified successfully.";
 }
