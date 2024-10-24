@@ -17,13 +17,13 @@ public class DishHandler implements IDishHandler {
     private final ICreateDishRequestMapper createDishRequestMapper;
 
     @Override
-    public void createDish(CreateDishRequest createDishRequest) {
+    public void createDish(Long ownerId, CreateDishRequest createDishRequest) {
         Dish dish = createDishRequestMapper.requestToDish(createDishRequest);
-        dishServicePort.createDish(dish);
+        dishServicePort.createDish(ownerId, dish);
     }
 
     @Override
-    public void modifyDish(Long id, ModifyDishRequest modifyDishRequest) {
-        dishServicePort.modifyDish(id, modifyDishRequest.getDescription(), modifyDishRequest.getPrice());
+    public void modifyDish(Long id, ModifyDishRequest modifyDishRequest, Long ownerId) {
+        dishServicePort.modifyDish(id, modifyDishRequest.getDescription(), modifyDishRequest.getPrice(), ownerId);
     }
 }

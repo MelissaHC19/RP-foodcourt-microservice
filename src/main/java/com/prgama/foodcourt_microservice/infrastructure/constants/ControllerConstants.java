@@ -14,4 +14,7 @@ public class ControllerConstants {
 
     public static final String DISH_CREATED_MESSAGE = "Dish created successfully.";
     public static final String DISH_MODIFIED_MESSAGE = "Dish modified successfully.";
+
+    public static final String ROLE_ADMIN = "Admin";
+    public static final String ROLE_OWNER = "Owner";
 }

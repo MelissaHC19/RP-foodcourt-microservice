@@ -2,10 +2,7 @@ package com.prgama.foodcourt_microservice.domain.usecase;
 
 import com.prgama.foodcourt_microservice.domain.api.IDishServicePort;
 import com.prgama.foodcourt_microservice.domain.constants.ExceptionConstants;
-import com.prgama.foodcourt_microservice.domain.exception.AlreadyExistsByNameException;
-import com.prgama.foodcourt_microservice.domain.exception.CategoryNotFoundException;
-import com.prgama.foodcourt_microservice.domain.exception.DishNotFoundException;
-import com.prgama.foodcourt_microservice.domain.exception.RestaurantNotFoundException;
+import com.prgama.foodcourt_microservice.domain.exception.*;
 import com.prgama.foodcourt_microservice.domain.model.Dish;
 import com.prgama.foodcourt_microservice.domain.spi.ICategoryPersistencePort;
 import com.prgama.foodcourt_microservice.domain.spi.IDishPersistencePort;
@@ -23,17 +20,21 @@ public class DishUseCase implements IDishServicePort {
     }
 
     @Override
-    public void createDish(Dish dish) {
+    public void createDish(Long ownerId, Dish dish) {
         validateDish(dish);
+        validateOwnerPermission(ownerId, dish);
         dishPersistencePort.createDish(dish);
     }
 
     @Override
-    public void modifyDish(Long id, String description, Integer price) {
+    public void modifyDish(Long id, String description, Integer price, Long ownerId) {
         Dish dish = dishPersistencePort.findById(id);
         if (dish == null) {
             throw new DishNotFoundException(ExceptionConstants.DISH_NOT_FOUND_MESSAGE);
         }
+
+        validateOwnerPermission(ownerId, dish);
+
         if (description != null) {
             dish.setDescription(description);
         }
@@ -54,6 +55,12 @@ public class DishUseCase implements IDishServicePort {
         }
         if (!categoryPersistencePort.alreadyExistsById(dish.getCategory().getId())) {
             throw new CategoryNotFoundException(ExceptionConstants.CATEGORY_NOT_FOUND_MESSAGE);
+        }
+    }
+
+    private void validateOwnerPermission(Long ownerId, Dish dish) {
+        if (restaurantPersistencePort.getRestaurant(dish.getRestaurant().getId()).getOwnerId() != ownerId) {
+            throw new UnauthorizedOwnerException(ExceptionConstants.UNAUTHORIZED_OWNER_MESSAGE);
         }
     }
 }

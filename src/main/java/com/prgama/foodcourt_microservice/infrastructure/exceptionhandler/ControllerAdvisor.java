@@ -59,6 +59,24 @@ public class ControllerAdvisor {
         return ResponseEntity.status(404).body(response);
     }
 
+    @ExceptionHandler(InvalidRoleException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidRoleException(InvalidRoleException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.FORBIDDEN.toString(), LocalDateTime.now());
+        return ResponseEntity.status(403).body(response);
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidTokenException(InvalidTokenException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.UNAUTHORIZED.toString(), LocalDateTime.now());
+        return ResponseEntity.status(401).body(response);
+    }
+
+    @ExceptionHandler(UnauthorizedOwnerException.class)
+    public ResponseEntity<ExceptionResponse> handleUnauthorizedOwnerException(UnauthorizedOwnerException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.FORBIDDEN.toString(), LocalDateTime.now());
+        return ResponseEntity.status(403).body(response);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptionsDTO(MethodArgumentNotValidException exception) {
         ArrayList<String> errors = new ArrayList<>();
