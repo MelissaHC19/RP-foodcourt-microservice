@@ -4,6 +4,5 @@ import com.prgama.foodcourt_microservice.domain.model.Dish;
 
 public interface IDishServicePort {
     void createDish(Long idOwner, Dish dish);
-    void modifyDish(Long id, String description, Integer price, Long idOwner);
-    void updateDishStatus(Long id, Boolean active, Long idOwner);
+    void modifyDish(Long id, String description, Integer price, Boolean active, Long idOwner);
 }

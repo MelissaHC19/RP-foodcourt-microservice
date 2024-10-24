@@ -27,7 +27,7 @@ public class DishUseCase implements IDishServicePort {
     }
 
     @Override
-    public void modifyDish(Long id, String description, Integer price, Long ownerId) {
+    public void modifyDish(Long id, String description, Integer price, Boolean active, Long ownerId) {
         Dish dish = dishPersistencePort.findById(id);
         validateDishExistence(dish);
         validateOwnerPermission(ownerId, dish);
@@ -38,18 +38,12 @@ public class DishUseCase implements IDishServicePort {
         if (price != null) {
             dish.setPrice(price);
         }
-        if (description != null || price != null) {
+        if (active != null) {
+            dish.setActive(active);
+        }
+        if (description != null || price != null || active != null) {
             dishPersistencePort.modifyDish(dish);
         }
-    }
-
-    @Override
-    public void updateDishStatus(Long id, Boolean active, Long ownerId) {
-        Dish dish = dishPersistencePort.findById(id);
-        validateDishExistence(dish);
-        validateOwnerPermission(ownerId, dish);
-        dish.setActive(active);
-        dishPersistencePort.updateDishStatus(dish);
     }
 
     private void validateDish(Dish dish) {

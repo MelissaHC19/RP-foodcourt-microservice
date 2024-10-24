@@ -7,5 +7,4 @@ public interface IDishPersistencePort {
     boolean alreadyExistsByName(String name);
     void modifyDish(Dish dish);
     Dish findById(Long id);
-    void updateDishStatus(Dish dish);
 }

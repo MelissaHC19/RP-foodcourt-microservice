@@ -12,4 +12,6 @@ public class ModifyDishRequest {
 
     @Positive(message = RequestConstants.POSITIVE_PRICE_MESSAGE)
     private Integer price;
+
+    private Boolean active;
 }

@@ -2,7 +2,6 @@ package com.prgama.foodcourt_microservice.infrastructure.input.rest;
 
 import com.prgama.foodcourt_microservice.application.dto.request.CreateDishRequest;
 import com.prgama.foodcourt_microservice.application.dto.request.ModifyDishRequest;
-import com.prgama.foodcourt_microservice.application.dto.request.UpdateDishStatusRequest;
 import com.prgama.foodcourt_microservice.application.dto.response.ControllerResponse;
 import com.prgama.foodcourt_microservice.application.handler.IAuthenticationHandler;
 import com.prgama.foodcourt_microservice.application.handler.IDishHandler;
@@ -81,13 +80,6 @@ public class DishRestControllerAdapter {
     public ResponseEntity<ControllerResponse> modifyDish(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable Long id, @Valid @RequestBody ModifyDishRequest request) {
         Long ownerId = authenticationHandler.authenticationForDish(token, ControllerConstants.ROLE_OWNER);
         dishHandler.modifyDish(id, request, ownerId);
-        return ResponseEntity.status(HttpStatus.OK).body(new ControllerResponse(ControllerConstants.DISH_MODIFIED_MESSAGE, HttpStatus.OK.toString(), LocalDateTime.now()));
-    }
-
-    @PatchMapping("/update/status/{id}")
-    public ResponseEntity<ControllerResponse> updateDishStatus(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable Long id, @Valid @RequestBody UpdateDishStatusRequest request) {
-        Long ownerId = authenticationHandler.authenticationForDish(token, ControllerConstants.ROLE_OWNER);
-        dishHandler.updateDishStatus(id, request, ownerId);
         return ResponseEntity.status(HttpStatus.OK).body(new ControllerResponse(ControllerConstants.DISH_MODIFIED_MESSAGE, HttpStatus.OK.toString(), LocalDateTime.now()));
     }
 }
