@@ -44,6 +44,12 @@ public class DishRestControllerAdapter {
             @ApiResponse(responseCode = DocumentationConstants.CONFLICT_STATUS_CODE,
                     description = DocumentationConstants.CONFLICT_RESPONSE_CODE_DESCRIPTION_DISH,
                     content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.FORBIDDEN_STATUS_CODE,
+                    description = DocumentationConstants.FORBIDDEN_RESPONSE_CODE_DESCRIPTION,
+                    content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.UNAUTHORIZED_STATUS_CODE,
+                    description = DocumentationConstants.UNAUTHORIZED_RESPONSE_CODE_DESCRIPTION,
+                    content = @Content),
     })
     @PostMapping("/create")
     public ResponseEntity<ControllerResponse> createDish(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid @RequestBody CreateDishRequest request) {
@@ -62,6 +68,12 @@ public class DishRestControllerAdapter {
                     content = @Content),
             @ApiResponse(responseCode = DocumentationConstants.NOT_FOUND_STATUS_CODE,
                     description = DocumentationConstants.NOT_FOUND_RESPONSE_CODE_DESCRIPTION_UPDATE_DISH,
+                    content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.FORBIDDEN_STATUS_CODE,
+                    description = DocumentationConstants.FORBIDDEN_RESPONSE_CODE_DESCRIPTION,
+                    content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.UNAUTHORIZED_STATUS_CODE,
+                    description = DocumentationConstants.UNAUTHORIZED_RESPONSE_CODE_DESCRIPTION,
                     content = @Content),
     })
     @PatchMapping("/update/{id}")

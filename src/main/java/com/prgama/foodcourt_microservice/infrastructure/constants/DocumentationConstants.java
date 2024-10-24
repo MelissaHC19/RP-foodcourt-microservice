@@ -22,6 +22,8 @@ public class DocumentationConstants {
     public static final String NOT_FOUND_STATUS_CODE = "404";
     public static final String CONFLICT_STATUS_CODE = "409";
     public static final String OK_STATUS_CODE = "200";
+    public static final String FORBIDDEN_STATUS_CODE = "403";
+    public static final String UNAUTHORIZED_STATUS_CODE = "401";
 
     public static final String CREATED_RESPONSE_CODE_DESCRIPTION = "Restaurant created successfully.";
     public static final String BAD_REQUEST_RESPONSE_CODE_DESCRIPTION = "Restaurant not created or user doesn't have owner role.";
@@ -35,4 +37,7 @@ public class DocumentationConstants {
 
     public static final String OK_RESPONSE_CODE_DESCRIPTION_UPDATE_DISH = "Dish modified successfully.";
     public static final String NOT_FOUND_RESPONSE_CODE_DESCRIPTION_UPDATE_DISH = "Dish not found with the provided id.";
+
+    public static final String FORBIDDEN_RESPONSE_CODE_DESCRIPTION = "You don't have permission to perform this action.";
+    public static final String UNAUTHORIZED_RESPONSE_CODE_DESCRIPTION = "Invalid token.";
 }
