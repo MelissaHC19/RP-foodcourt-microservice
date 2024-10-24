@@ -3,6 +3,7 @@ package com.prgama.foodcourt_microservice.infrastructure.input.rest;
 import com.prgama.foodcourt_microservice.application.dto.request.CreateDishRequest;
 import com.prgama.foodcourt_microservice.application.dto.request.ModifyDishRequest;
 import com.prgama.foodcourt_microservice.application.dto.response.ControllerResponse;
+import com.prgama.foodcourt_microservice.application.handler.IAuthenticationHandler;
 import com.prgama.foodcourt_microservice.application.handler.IDishHandler;
 import com.prgama.foodcourt_microservice.infrastructure.constants.ControllerConstants;
 import com.prgama.foodcourt_microservice.infrastructure.constants.DocumentationConstants;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class DishRestControllerAdapter {
     private final IDishHandler dishHandler;
+    private final IAuthenticationHandler authenticationHandler;
 
     @Operation(summary = DocumentationConstants.CREATE_DISH_SUMMARY,
             tags = {DocumentationConstants.DISH_TAG},
@@ -43,8 +46,9 @@ public class DishRestControllerAdapter {
                     content = @Content),
     })
     @PostMapping("/create")
-    public ResponseEntity<ControllerResponse> createDish(@Valid @RequestBody CreateDishRequest request) {
-        dishHandler.createDish(request);
+    public ResponseEntity<ControllerResponse> createDish(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid @RequestBody CreateDishRequest request) {
+        Long ownerId = authenticationHandler.authenticationForDish(token, ControllerConstants.ROLE_OWNER);
+        dishHandler.createDish(ownerId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ControllerResponse(ControllerConstants.DISH_CREATED_MESSAGE, HttpStatus.CREATED.toString(), LocalDateTime.now()));
     }
 
@@ -61,8 +65,9 @@ public class DishRestControllerAdapter {
                     content = @Content),
     })
     @PatchMapping("/update/{id}")
-    public ResponseEntity<ControllerResponse> modifyDish(@PathVariable Long id, @Valid @RequestBody ModifyDishRequest request) {
-        dishHandler.modifyDish(id, request);
+    public ResponseEntity<ControllerResponse> modifyDish(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable Long id, @Valid @RequestBody ModifyDishRequest request) {
+        Long ownerId = authenticationHandler.authenticationForDish(token, ControllerConstants.ROLE_OWNER);
+        dishHandler.modifyDish(id, request, ownerId);
         return ResponseEntity.status(HttpStatus.OK).body(new ControllerResponse(ControllerConstants.DISH_MODIFIED_MESSAGE, HttpStatus.OK.toString(), LocalDateTime.now()));
     }
 }

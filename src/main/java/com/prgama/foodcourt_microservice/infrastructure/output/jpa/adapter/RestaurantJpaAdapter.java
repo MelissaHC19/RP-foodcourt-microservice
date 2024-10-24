@@ -25,4 +25,10 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort {
     public boolean alreadyExistsById(Long id) {
         return restaurantRepository.findById(id).isPresent();
     }
+
+    @Override
+    public Restaurant getRestaurant(Long id) {
+        return restaurantEntityMapper.entityToRestaurant(restaurantRepository.findById(id)
+                .orElse(null));
+    }
 }

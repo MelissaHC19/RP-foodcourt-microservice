@@ -1,11 +1,14 @@
 package com.prgama.foodcourt_microservice.infrastructure.configuration;
 
+import com.prgama.foodcourt_microservice.domain.api.IAuthenticationServicePort;
 import com.prgama.foodcourt_microservice.domain.api.IDishServicePort;
 import com.prgama.foodcourt_microservice.domain.api.IRestaurantServicePort;
 import com.prgama.foodcourt_microservice.domain.api.IUserServicePort;
 import com.prgama.foodcourt_microservice.domain.spi.ICategoryPersistencePort;
 import com.prgama.foodcourt_microservice.domain.spi.IDishPersistencePort;
 import com.prgama.foodcourt_microservice.domain.spi.IRestaurantPersistencePort;
+import com.prgama.foodcourt_microservice.domain.spi.ITokenProviderPort;
+import com.prgama.foodcourt_microservice.domain.usecase.AuthenticationUseCase;
 import com.prgama.foodcourt_microservice.domain.usecase.DishUseCase;
 import com.prgama.foodcourt_microservice.domain.usecase.RestaurantUseCase;
 import com.prgama.foodcourt_microservice.infrastructure.output.jpa.adapter.CategoryJpaAdapter;
@@ -16,6 +19,7 @@ import com.prgama.foodcourt_microservice.infrastructure.output.jpa.mapper.IResta
 import com.prgama.foodcourt_microservice.infrastructure.output.jpa.repository.ICategoryRepository;
 import com.prgama.foodcourt_microservice.infrastructure.output.jpa.repository.IDishRepository;
 import com.prgama.foodcourt_microservice.infrastructure.output.jpa.repository.IRestaurantRepository;
+import com.prgama.foodcourt_microservice.infrastructure.security.adapter.TokenAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -53,5 +57,15 @@ public class BeanConfiguration {
     @Bean
     public IDishServicePort dishServicePort() {
         return new DishUseCase(dishPersistencePort(), categoryPersistencePort(), restaurantPersistencePort());
+    }
+
+    @Bean
+    public ITokenProviderPort tokenProviderPort() {
+        return new TokenAdapter();
+    }
+
+    @Bean
+    public IAuthenticationServicePort authenticationServicePort() {
+        return new AuthenticationUseCase(tokenProviderPort());
     }
 }

@@ -6,4 +6,5 @@ public interface IRestaurantPersistencePort {
     void createRestaurant(Restaurant restaurant);
     boolean alreadyExistsByNit(String nit);
     boolean alreadyExistsById(Long id);
+    Restaurant getRestaurant(Long id);
 }
