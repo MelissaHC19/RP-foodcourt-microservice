@@ -12,7 +12,7 @@ public class DocumentationConstants {
     public static final String CREATE_DISH_DESCRIPTION = "This endpoint allows the creation of a new dish for a restaurant by submitting required fields: name, description, price (it must be integers greater than zero), url image, restaurant's id, and category's id.";
 
     public static final String UPDATE_DISH_SUMMARY = "Update dish";
-    public static final String UPDATE_DISH_DESCRIPTION = "This endpoint allows the modification of an existing dish's description and price.";
+    public static final String UPDATE_DISH_DESCRIPTION = "This endpoint allows the modification of an existing dish's description, price, and status (true to active a dish and false to deactivate it).";
 
     public static final String RESTAURANT_TAG = "Restaurant";
     public static final String DISH_TAG = "Dish";
