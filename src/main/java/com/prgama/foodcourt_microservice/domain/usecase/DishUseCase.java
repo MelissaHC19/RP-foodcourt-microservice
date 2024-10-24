@@ -29,10 +29,7 @@ public class DishUseCase implements IDishServicePort {
     @Override
     public void modifyDish(Long id, String description, Integer price, Long ownerId) {
         Dish dish = dishPersistencePort.findById(id);
-        if (dish == null) {
-            throw new DishNotFoundException(ExceptionConstants.DISH_NOT_FOUND_MESSAGE);
-        }
-
+        validateDishExistence(dish);
         validateOwnerPermission(ownerId, dish);
 
         if (description != null) {
@@ -44,6 +41,15 @@ public class DishUseCase implements IDishServicePort {
         if (description != null || price != null) {
             dishPersistencePort.modifyDish(dish);
         }
+    }
+
+    @Override
+    public void updateDishStatus(Long id, Boolean active, Long ownerId) {
+        Dish dish = dishPersistencePort.findById(id);
+        validateDishExistence(dish);
+        validateOwnerPermission(ownerId, dish);
+        dish.setActive(active);
+        dishPersistencePort.updateDishStatus(dish);
     }
 
     private void validateDish(Dish dish) {
@@ -61,6 +67,12 @@ public class DishUseCase implements IDishServicePort {
     private void validateOwnerPermission(Long ownerId, Dish dish) {
         if (restaurantPersistencePort.getRestaurant(dish.getRestaurant().getId()).getOwnerId() != ownerId) {
             throw new UnauthorizedOwnerException(ExceptionConstants.UNAUTHORIZED_OWNER_MESSAGE);
+        }
+    }
+
+    private void validateDishExistence(Dish dish) {
+        if (dish == null) {
+            throw new DishNotFoundException(ExceptionConstants.DISH_NOT_FOUND_MESSAGE);
         }
     }
 }

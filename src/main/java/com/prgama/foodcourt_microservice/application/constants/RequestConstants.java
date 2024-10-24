@@ -33,4 +33,6 @@ public class RequestConstants {
     public static final String RESTAURANT_ID_MANDATORY_MESSAGE = "Restaurant's id must be provided.";
 
     public static final String CATEGORY_ID_MANDATORY_MESSAGE = "Category's id must be provided.";
+
+    public static final String DISH_STATUS_MANDATORY_MESSAGE = "You must indicate dish status. If it's active, true, if not, false.";
 }
