@@ -3,6 +3,8 @@ package com.prgama.foodcourt_microservice.infrastructure.input.rest;
 import com.prgama.foodcourt_microservice.application.dto.request.CreateDishRequest;
 import com.prgama.foodcourt_microservice.application.dto.request.ModifyDishRequest;
 import com.prgama.foodcourt_microservice.application.dto.response.ControllerResponse;
+import com.prgama.foodcourt_microservice.application.dto.response.ListDishesResponse;
+import com.prgama.foodcourt_microservice.application.dto.response.PaginationResponse;
 import com.prgama.foodcourt_microservice.application.handler.IAuthenticationHandler;
 import com.prgama.foodcourt_microservice.application.handler.IDishHandler;
 import com.prgama.foodcourt_microservice.infrastructure.constants.ControllerConstants;
@@ -81,5 +83,19 @@ public class DishRestControllerAdapter {
         Long ownerId = authenticationHandler.authenticationForDish(token, ControllerConstants.ROLE_OWNER);
         dishHandler.modifyDish(id, request, ownerId);
         return ResponseEntity.status(HttpStatus.OK).body(new ControllerResponse(ControllerConstants.DISH_MODIFIED_MESSAGE, HttpStatus.OK.toString(), LocalDateTime.now()));
+    }
+
+    @GetMapping("/list/{restaurantId}")
+    public ResponseEntity<PaginationResponse<ListDishesResponse>> listDishes(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @PathVariable Long restaurantId,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Integer pageNumber,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(defaultValue = ControllerConstants.DEFAULT_SORT_DIRECTION) String sortDirection
+    ) {
+        authenticationHandler.authentication(token, ControllerConstants.ROLE_CLIENT);
+        PaginationResponse<ListDishesResponse> pagination = dishHandler.listDishes(restaurantId, categoryId, pageNumber, pageSize, sortDirection);
+        return ResponseEntity.status(HttpStatus.OK).body(pagination);
     }
 }

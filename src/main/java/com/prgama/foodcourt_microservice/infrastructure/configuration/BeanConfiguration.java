@@ -15,6 +15,7 @@ import com.prgama.foodcourt_microservice.infrastructure.output.jpa.adapter.Categ
 import com.prgama.foodcourt_microservice.infrastructure.output.jpa.adapter.DishJpaAdapter;
 import com.prgama.foodcourt_microservice.infrastructure.output.jpa.adapter.RestaurantJpaAdapter;
 import com.prgama.foodcourt_microservice.infrastructure.output.jpa.mapper.IDishEntityMapper;
+import com.prgama.foodcourt_microservice.infrastructure.output.jpa.mapper.IDishPageMapper;
 import com.prgama.foodcourt_microservice.infrastructure.output.jpa.mapper.IRestaurantEntityMapper;
 import com.prgama.foodcourt_microservice.infrastructure.output.jpa.mapper.IRestaurantPageMapper;
 import com.prgama.foodcourt_microservice.infrastructure.output.jpa.repository.ICategoryRepository;
@@ -35,6 +36,7 @@ public class BeanConfiguration {
     private final IDishRepository dishRepository;
     private final ICategoryRepository categoryRepository;
     private final IRestaurantPageMapper restaurantPageMapper;
+    private final IDishPageMapper dishPageMapper;
 
     @Bean
     public IRestaurantPersistencePort restaurantPersistencePort() {
@@ -53,7 +55,7 @@ public class BeanConfiguration {
 
     @Bean
     public IDishPersistencePort dishPersistencePort() {
-        return new DishJpaAdapter(dishEntityMapper, dishRepository);
+        return new DishJpaAdapter(dishEntityMapper, dishRepository, dishPageMapper);
     }
 
     @Bean
