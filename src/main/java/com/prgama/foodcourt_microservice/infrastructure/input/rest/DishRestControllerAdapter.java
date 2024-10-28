@@ -3,11 +3,14 @@ package com.prgama.foodcourt_microservice.infrastructure.input.rest;
 import com.prgama.foodcourt_microservice.application.dto.request.CreateDishRequest;
 import com.prgama.foodcourt_microservice.application.dto.request.ModifyDishRequest;
 import com.prgama.foodcourt_microservice.application.dto.response.ControllerResponse;
+import com.prgama.foodcourt_microservice.application.dto.response.ListDishesResponse;
+import com.prgama.foodcourt_microservice.application.dto.response.PaginationResponse;
 import com.prgama.foodcourt_microservice.application.handler.IAuthenticationHandler;
 import com.prgama.foodcourt_microservice.application.handler.IDishHandler;
 import com.prgama.foodcourt_microservice.infrastructure.constants.ControllerConstants;
 import com.prgama.foodcourt_microservice.infrastructure.constants.DocumentationConstants;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -81,5 +84,35 @@ public class DishRestControllerAdapter {
         Long ownerId = authenticationHandler.authenticationForDish(token, ControllerConstants.ROLE_OWNER);
         dishHandler.modifyDish(id, request, ownerId);
         return ResponseEntity.status(HttpStatus.OK).body(new ControllerResponse(ControllerConstants.DISH_MODIFIED_MESSAGE, HttpStatus.OK.toString(), LocalDateTime.now()));
+    }
+
+    @Operation(summary = DocumentationConstants.LIST_DISHES_SUMMARY,
+            tags = {DocumentationConstants.DISH_TAG},
+            description = DocumentationConstants.LIST_DISHES_DESCRIPTION
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = DocumentationConstants.OK_STATUS_CODE,
+                    description = DocumentationConstants.OK_RESPONSE_CODE_DESCRIPTION_PAGINATION_DISHES,
+                    content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.BAD_REQUEST_STATUS_CODE,
+                    description = DocumentationConstants.BAD_REQUEST_RESPONSE_CODE_DESCRIPTION_PAGINATION,
+                    content = @Content),
+    })
+    @GetMapping("/list/{restaurantId}")
+    public ResponseEntity<PaginationResponse<ListDishesResponse>> listDishes(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @PathVariable Long restaurantId,
+            @Parameter(description = DocumentationConstants.CATEGORY_ID_PARAMETER)
+            @RequestParam(required = false) Long categoryId,
+            @Parameter(description = DocumentationConstants.PAGE_NUMBER_PARAMETER)
+            @RequestParam(required = false) Integer pageNumber,
+            @Parameter(description = DocumentationConstants.PAGE_SIZE_PARAMETER_DISHES)
+            @RequestParam(required = false) Integer pageSize,
+            @Parameter(description = DocumentationConstants.SORT_DIRECTION_PARAMETER)
+            @RequestParam(defaultValue = ControllerConstants.DEFAULT_SORT_DIRECTION) String sortDirection
+    ) {
+        authenticationHandler.authentication(token, ControllerConstants.ROLE_CLIENT);
+        PaginationResponse<ListDishesResponse> pagination = dishHandler.listDishes(restaurantId, categoryId, pageNumber, pageSize, sortDirection);
+        return ResponseEntity.status(HttpStatus.OK).body(pagination);
     }
 }

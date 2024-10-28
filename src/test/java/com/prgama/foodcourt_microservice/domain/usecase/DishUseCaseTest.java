@@ -4,6 +4,7 @@ import com.prgama.foodcourt_microservice.domain.constants.ExceptionConstants;
 import com.prgama.foodcourt_microservice.domain.exception.*;
 import com.prgama.foodcourt_microservice.domain.model.Category;
 import com.prgama.foodcourt_microservice.domain.model.Dish;
+import com.prgama.foodcourt_microservice.domain.model.Pagination;
 import com.prgama.foodcourt_microservice.domain.model.Restaurant;
 import com.prgama.foodcourt_microservice.domain.spi.ICategoryPersistencePort;
 import com.prgama.foodcourt_microservice.domain.spi.IDishPersistencePort;
@@ -15,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -249,5 +252,151 @@ class DishUseCaseTest {
         assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.UNAUTHORIZED_OWNER_MESSAGE);
         Mockito.verify(dishPersistencePort, Mockito.never()).modifyDish(null);
         Mockito.verify(restaurantPersistencePort, Mockito.times(1)).getRestaurant(1L);
+    }
+
+    @Test
+    @DisplayName("List dishes by restaurant and category correctly")
+    void listDishesByRestaurantAndCategory() {
+        Dish dish = new Dish(1L, "Crispy Calamari",
+                "Lightly breaded calamari rings, served with a tangy marinara sauce.",
+                45000, "crispy-calamari.jpg",
+                new Restaurant(1L, null, null, null, null, null, null),
+                new Category(2L, "Appetizers", null));
+        Pagination<Dish> pagination = new Pagination<>(List.of(dish), 0, 10, 1L);
+
+        Mockito.when(restaurantPersistencePort.alreadyExistsById(1L)).thenReturn(true);
+        Mockito.when(categoryPersistencePort.alreadyExistsById(2L)).thenReturn(true);
+        Mockito.when(dishPersistencePort.listDishesByRestaurantAndCategory(1L, 2L, 0, 10, "name", "asc")).thenReturn(pagination);
+
+        Pagination<Dish> result = dishUseCase.listDishesByRestaurantAndCategory(1L, 2L, 0, 10, "asc");
+
+        assertNotNull(result, "The result shouldn't be null.");
+        assertFalse(result.getContent().isEmpty(), "The content shouldn't be empty.");
+        assertEquals(1, result.getContent().size(), "The number of dishes should be 1.");
+
+        Dish returnedDish = result.getContent().get(0);
+        assertEquals("Crispy Calamari", returnedDish.getName(), "The dish's name should be Crispy Calamari.");
+        assertEquals("Lightly breaded calamari rings, served with a tangy marinara sauce.", returnedDish.getDescription(), "The dish's description should be 'Lightly breaded calamari rings, served with a tangy marinara sauce.'");
+        assertEquals(45000, returnedDish.getPrice(), "The dish's price should be 45000");
+        assertEquals("crispy-calamari.jpg", returnedDish.getUrlImage(), "The dish's url image should be crispy-calamari.jpg");
+        assertEquals("Appetizers", returnedDish.getCategory().getName(), "The dish's category should be Appetizers");
+
+        Mockito.verify(restaurantPersistencePort, Mockito.times(1)).alreadyExistsById(1L);
+        Mockito.verify(categoryPersistencePort, Mockito.times(1)).alreadyExistsById(2L);
+        Mockito.verify(dishPersistencePort, Mockito.times(1)).listDishesByRestaurantAndCategory(1L, 2L, 0, 10, "name", "asc");
+    }
+
+    @Test
+    @DisplayName("List dishes by restaurant correctly")
+    void listDishesByRestaurant() {
+        Dish dish = new Dish(1L, "Crispy Calamari",
+                "Lightly breaded calamari rings, served with a tangy marinara sauce.",
+                45000, "crispy-calamari.jpg",
+                new Restaurant(1L, null, null, null, null, null, null),
+                new Category(2L, "Appetizers", null));
+        Pagination<Dish> pagination = new Pagination<>(List.of(dish), 0, 10, 1L);
+
+        Mockito.when(restaurantPersistencePort.alreadyExistsById(1L)).thenReturn(true);
+        Mockito.when(dishPersistencePort.listDishesByRestaurantAndCategory(1L, null, 0, 10, "name", "asc")).thenReturn(pagination);
+
+        Pagination<Dish> result = dishUseCase.listDishesByRestaurantAndCategory(1L, null, 0, 10, "asc");
+
+        assertNotNull(result, "The result shouldn't be null.");
+        assertFalse(result.getContent().isEmpty(), "The content shouldn't be empty.");
+        assertEquals(1, result.getContent().size(), "The number of dishes should be 1.");
+
+        Dish returnedDish = result.getContent().get(0);
+        assertEquals("Crispy Calamari", returnedDish.getName(), "The dish's name should be Crispy Calamari.");
+        assertEquals("Lightly breaded calamari rings, served with a tangy marinara sauce.", returnedDish.getDescription(), "The dish's description should be 'Lightly breaded calamari rings, served with a tangy marinara sauce.'");
+        assertEquals(45000, returnedDish.getPrice(), "The dish's price should be 45000");
+        assertEquals("crispy-calamari.jpg", returnedDish.getUrlImage(), "The dish's url image should be crispy-calamari.jpg");
+        assertEquals("Appetizers", returnedDish.getCategory().getName(), "The dish's category should be Appetizers");
+
+        Mockito.verify(restaurantPersistencePort, Mockito.times(1)).alreadyExistsById(1L);
+        Mockito.verify(dishPersistencePort, Mockito.times(1)).listDishesByRestaurantAndCategory(1L, null, 0, 10, "name", "asc");
+    }
+
+    @Test
+    @DisplayName("Validation exception when restaurant not found")
+    void listDishesByRestaurantShouldThrowValidationExceptionWhenRestaurantNotFound() {
+        RestaurantNotFoundException exception = assertThrows(RestaurantNotFoundException.class, () -> {
+            dishUseCase.listDishesByRestaurantAndCategory(1L, null, 0, 10, "asc");
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.RESTAURANT_NOT_FOUND_MESSAGE);
+        Mockito.verify(restaurantPersistencePort, Mockito.times(1)).alreadyExistsById(1L);
+        Mockito.verify(dishPersistencePort, Mockito.never()).listDishesByRestaurantAndCategory(1L, null, 0, 10, "name", "asc");
+    }
+
+    @Test
+    @DisplayName("Validation exception when category not found")
+    void listDishesByRestaurantAndCategoryShouldThrowValidationExceptionWhenCategoryNotFound() {
+        Mockito.when(restaurantPersistencePort.alreadyExistsById(1L)).thenReturn(true);
+        CategoryNotFoundException exception = assertThrows(CategoryNotFoundException.class, () -> {
+            dishUseCase.listDishesByRestaurantAndCategory(1L, 2L, 0, 10, "asc");
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.CATEGORY_NOT_FOUND_MESSAGE);
+        Mockito.verify(restaurantPersistencePort, Mockito.times(1)).alreadyExistsById(1L);
+        Mockito.verify(categoryPersistencePort, Mockito.times(1)).alreadyExistsById(2L);
+        Mockito.verify(dishPersistencePort, Mockito.never()).listDishesByRestaurantAndCategory(1L, 2L, 0, 10, "name", "asc");
+    }
+
+    @Test
+    @DisplayName("Validation exception when page number is null")
+    void listDishesByRestaurantShouldThrowValidationExceptionWhenPageNumberIsNull() {
+        Mockito.when(restaurantPersistencePort.alreadyExistsById(1L)).thenReturn(true);
+        InvalidPageNumberException exception = assertThrows(InvalidPageNumberException.class, () -> {
+            dishUseCase.listDishesByRestaurantAndCategory(1L, null, null, 10, "asc");
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.PAGE_NUMBER_MANDATORY_MESSAGE);
+        Mockito.verify(restaurantPersistencePort, Mockito.times(1)).alreadyExistsById(1L);
+        Mockito.verify(dishPersistencePort, Mockito.never()).listDishesByRestaurantAndCategory(1L, null, null, 10, "name", "asc");
+    }
+
+    @Test
+    @DisplayName("Validation exception when page number is a negative number")
+    void listDishesByRestaurantShouldThrowValidationExceptionWhenPageNumberIsNegative() {
+        Mockito.when(restaurantPersistencePort.alreadyExistsById(1L)).thenReturn(true);
+        InvalidPageNumberException exception = assertThrows(InvalidPageNumberException.class, () -> {
+            dishUseCase.listDishesByRestaurantAndCategory(1L, null, -1, 10, "asc");
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.INVALID_PAGE_NUMBER_MESSAGE);
+        Mockito.verify(restaurantPersistencePort, Mockito.times(1)).alreadyExistsById(1L);
+        Mockito.verify(dishPersistencePort, Mockito.never()).listDishesByRestaurantAndCategory(1L, null, -1, 10, "name", "asc");
+    }
+
+    @Test
+    @DisplayName("Validation exception when page size is null")
+    void listDishesByRestaurantShouldThrowValidationExceptionWhenPageSizeIsNull() {
+        Mockito.when(restaurantPersistencePort.alreadyExistsById(1L)).thenReturn(true);
+        InvalidPageSizeException exception = assertThrows(InvalidPageSizeException.class, () -> {
+            dishUseCase.listDishesByRestaurantAndCategory(1L, null, 0, null, "asc");
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.PAGE_SIZE_MANDATORY_MESSAGE);
+        Mockito.verify(restaurantPersistencePort, Mockito.times(1)).alreadyExistsById(1L);
+        Mockito.verify(dishPersistencePort, Mockito.never()).listDishesByRestaurantAndCategory(1L, null, 0, null, "name", "asc");
+    }
+
+    @Test
+    @DisplayName("Validation exception when page size is less than or equal to zero")
+    void listDishesByRestaurantShouldThrowValidationExceptionWhenPageSizeIsLessThanOrEqualToZero() {
+        Mockito.when(restaurantPersistencePort.alreadyExistsById(1L)).thenReturn(true);
+        InvalidPageSizeException exception = assertThrows(InvalidPageSizeException.class, () -> {
+            dishUseCase.listDishesByRestaurantAndCategory(1L, null, 0, 0, "asc");
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.INVALID_PAGE_SIZE_MESSAGE);
+        Mockito.verify(restaurantPersistencePort, Mockito.times(1)).alreadyExistsById(1L);
+        Mockito.verify(dishPersistencePort, Mockito.never()).listDishesByRestaurantAndCategory(1L, null, 0, 0, "name", "asc");
+    }
+
+    @Test
+    @DisplayName("Validation exception when sort direction isn't 'asc' or 'desc'")
+    void listDishesByRestaurantShouldThrowValidationExceptionWhenSortDirectionIsNotAscOrDesc() {
+        Mockito.when(restaurantPersistencePort.alreadyExistsById(1L)).thenReturn(true);
+        InvalidSortDirectionException exception = assertThrows(InvalidSortDirectionException.class, () -> {
+            dishUseCase.listDishesByRestaurantAndCategory(1L, null, 0, 10, "order");
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.INVALID_SORT_DIRECTION_MESSAGE);
+        Mockito.verify(restaurantPersistencePort, Mockito.times(1)).alreadyExistsById(1L);
+        Mockito.verify(dishPersistencePort, Mockito.never()).listDishesByRestaurantAndCategory(1L, null, 0, 10, "name", "order");
     }
 }

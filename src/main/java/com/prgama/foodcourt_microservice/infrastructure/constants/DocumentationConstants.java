@@ -17,6 +17,9 @@ public class DocumentationConstants {
     public static final String LIST_RESTAURANTS_SUMMARY = "List restaurants";
     public static final String LIST_RESTAURANTS_DESCRIPTION = "This endpoint retrieves a paginated list of restaurants by providing page number, page size (number of elements per page) and sort direction (ascendant or descendant).";
 
+    public static final String LIST_DISHES_SUMMARY = "List dishes per restaurant";
+    public static final String LIST_DISHES_DESCRIPTION = "This endpoint retrieves a paginated list of dishes from an specific restaurant by providing page number, page size (number of elements per page) and sort direction (ascendant or descendant). It has an optional filter by category when providing the category id.";
+
     public static final String RESTAURANT_TAG = "Restaurant";
     public static final String DISH_TAG = "Dish";
 
@@ -45,9 +48,12 @@ public class DocumentationConstants {
     public static final String UNAUTHORIZED_RESPONSE_CODE_DESCRIPTION = "Invalid token.";
 
     public static final String BAD_REQUEST_RESPONSE_CODE_DESCRIPTION_PAGINATION = "Invalid parameters provided.";
-    public static final String OK_RESPONSE_CODE_DESCRIPTION_PAGINATION = "Successfully retrieved restaurants.";
+    public static final String OK_RESPONSE_CODE_DESCRIPTION_PAGINATION_RESTAURANTS = "Successfully retrieved restaurants.";
+    public static final String OK_RESPONSE_CODE_DESCRIPTION_PAGINATION_DISHES = "Successfully retrieved dishes from restaurant.";
 
     public static final String PAGE_NUMBER_PARAMETER = "Page number to retrieve (starting from 0)";
-    public static final String PAGE_SIZE_PARAMETER = "Number of restaurants per page";
+    public static final String PAGE_SIZE_PARAMETER_RESTAURANTS = "Number of restaurants per page";
+    public static final String PAGE_SIZE_PARAMETER_DISHES = "Number of dishes per page";
     public static final String SORT_DIRECTION_PARAMETER = "Sorting order 'asc' or 'desc'";
+    public static final String CATEGORY_ID_PARAMETER = "(Optional) If specified, filter dishes by the category id. If omitted, all dishes from the restaurant are returned";
 }

@@ -2,8 +2,10 @@ package com.prgama.foodcourt_microservice.domain.usecase;
 
 import com.prgama.foodcourt_microservice.domain.api.IDishServicePort;
 import com.prgama.foodcourt_microservice.domain.constants.ExceptionConstants;
+import com.prgama.foodcourt_microservice.domain.constants.PaginationConstants;
 import com.prgama.foodcourt_microservice.domain.exception.*;
 import com.prgama.foodcourt_microservice.domain.model.Dish;
+import com.prgama.foodcourt_microservice.domain.model.Pagination;
 import com.prgama.foodcourt_microservice.domain.spi.ICategoryPersistencePort;
 import com.prgama.foodcourt_microservice.domain.spi.IDishPersistencePort;
 import com.prgama.foodcourt_microservice.domain.spi.IRestaurantPersistencePort;
@@ -46,6 +48,13 @@ public class DishUseCase implements IDishServicePort {
         }
     }
 
+    @Override
+    public Pagination<Dish> listDishesByRestaurantAndCategory(Long restaurantId, Long categoryId, Integer pageNumber, Integer pageSize, String sortDirection) {
+        validateRestaurantAndCategoryExistence(restaurantId, categoryId);
+        validatePagination(pageNumber, pageSize, sortDirection);
+        return dishPersistencePort.listDishesByRestaurantAndCategory(restaurantId, categoryId, pageNumber, pageSize, PaginationConstants.SORT_BY_NAME, sortDirection);
+    }
+
     private void validateDish(Dish dish) {
         if (dishPersistencePort.alreadyExistsByName(dish.getName())) {
             throw new AlreadyExistsByNameException(ExceptionConstants.ALREADY_EXISTS_BY_NAME_MESSAGE);
@@ -67,6 +76,31 @@ public class DishUseCase implements IDishServicePort {
     private void validateDishExistence(Dish dish) {
         if (dish == null) {
             throw new DishNotFoundException(ExceptionConstants.DISH_NOT_FOUND_MESSAGE);
+        }
+    }
+
+    private void validateRestaurantAndCategoryExistence(Long restaurantId, Long categoryId) {
+        if (!restaurantPersistencePort.alreadyExistsById(restaurantId)) {
+            throw new RestaurantNotFoundException(ExceptionConstants.RESTAURANT_NOT_FOUND_MESSAGE);
+        }
+        if (categoryId != null && !categoryPersistencePort.alreadyExistsById(categoryId)) {
+            throw new CategoryNotFoundException(ExceptionConstants.CATEGORY_NOT_FOUND_MESSAGE);
+        }
+    }
+
+    private void validatePagination(Integer pageNumber, Integer pageSize, String sortDirection) {
+        if (pageNumber == null) {
+            throw new InvalidPageNumberException(ExceptionConstants.PAGE_NUMBER_MANDATORY_MESSAGE);
+        } else if (pageNumber < 0) {
+            throw new InvalidPageNumberException(ExceptionConstants.INVALID_PAGE_NUMBER_MESSAGE);
+        }
+        if (pageSize == null) {
+            throw new InvalidPageSizeException(ExceptionConstants.PAGE_SIZE_MANDATORY_MESSAGE);
+        } else if (pageSize <= 0) {
+            throw new InvalidPageSizeException(ExceptionConstants.INVALID_PAGE_SIZE_MESSAGE);
+        }
+        if (!sortDirection.equalsIgnoreCase(PaginationConstants.SORT_DIRECTION_ASC) && !sortDirection.equalsIgnoreCase(PaginationConstants.SORT_DIRECTION_DESC)) {
+            throw new InvalidSortDirectionException(ExceptionConstants.INVALID_SORT_DIRECTION_MESSAGE);
         }
     }
 }
