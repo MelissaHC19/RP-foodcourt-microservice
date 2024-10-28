@@ -66,7 +66,7 @@ public class RestaurantRestControllerAdapter {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = DocumentationConstants.OK_STATUS_CODE,
-                    description = DocumentationConstants.OK_RESPONSE_CODE_DESCRIPTION_PAGINATION,
+                    description = DocumentationConstants.OK_RESPONSE_CODE_DESCRIPTION_PAGINATION_RESTAURANTS,
                     content = @Content),
             @ApiResponse(responseCode = DocumentationConstants.BAD_REQUEST_STATUS_CODE,
                     description = DocumentationConstants.BAD_REQUEST_RESPONSE_CODE_DESCRIPTION_PAGINATION,
@@ -77,7 +77,7 @@ public class RestaurantRestControllerAdapter {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @Parameter(description = DocumentationConstants.PAGE_NUMBER_PARAMETER)
             @RequestParam(required = false) Integer pageNumber,
-            @Parameter(description = DocumentationConstants.PAGE_SIZE_PARAMETER)
+            @Parameter(description = DocumentationConstants.PAGE_SIZE_PARAMETER_RESTAURANTS)
             @RequestParam(required = false) Integer pageSize,
             @Parameter(description = DocumentationConstants.SORT_DIRECTION_PARAMETER)
             @RequestParam(defaultValue = ControllerConstants.DEFAULT_SORT_DIRECTION) String sortDirection
