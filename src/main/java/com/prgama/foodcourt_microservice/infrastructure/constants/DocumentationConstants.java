@@ -14,6 +14,9 @@ public class DocumentationConstants {
     public static final String UPDATE_DISH_SUMMARY = "Update dish";
     public static final String UPDATE_DISH_DESCRIPTION = "This endpoint allows the modification of an existing dish's description, price, and status (true to active a dish and false to deactivate it).";
 
+    public static final String LIST_RESTAURANTS_SUMMARY = "List restaurants";
+    public static final String LIST_RESTAURANTS_DESCRIPTION = "This endpoint retrieves a paginated list of restaurants by providing page number, page size (number of elements per page) and sort direction (ascendant or descendant).";
+
     public static final String RESTAURANT_TAG = "Restaurant";
     public static final String DISH_TAG = "Dish";
 
@@ -40,4 +43,11 @@ public class DocumentationConstants {
 
     public static final String FORBIDDEN_RESPONSE_CODE_DESCRIPTION = "You don't have permission to perform this action.";
     public static final String UNAUTHORIZED_RESPONSE_CODE_DESCRIPTION = "Invalid token.";
+
+    public static final String BAD_REQUEST_RESPONSE_CODE_DESCRIPTION_PAGINATION = "Invalid parameters provided.";
+    public static final String OK_RESPONSE_CODE_DESCRIPTION_PAGINATION = "Successfully retrieved restaurants.";
+
+    public static final String PAGE_NUMBER_PARAMETER = "Page number to retrieve (starting from 0)";
+    public static final String PAGE_SIZE_PARAMETER = "Number of restaurants per page";
+    public static final String SORT_DIRECTION_PARAMETER = "Sorting order 'asc' or 'desc'";
 }
