@@ -17,4 +17,5 @@ public class ControllerConstants {
 
     public static final String ROLE_ADMIN = "Admin";
     public static final String ROLE_OWNER = "Owner";
+    public static final String ROLE_CLIENT = "Client";
 }

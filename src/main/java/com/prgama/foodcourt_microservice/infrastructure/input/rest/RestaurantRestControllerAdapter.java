@@ -2,6 +2,8 @@ package com.prgama.foodcourt_microservice.infrastructure.input.rest;
 
 import com.prgama.foodcourt_microservice.application.dto.request.CreateRestaurantRequest;
 import com.prgama.foodcourt_microservice.application.dto.response.ControllerResponse;
+import com.prgama.foodcourt_microservice.application.dto.response.ListRestaurantsResponse;
+import com.prgama.foodcourt_microservice.application.dto.response.PaginationResponse;
 import com.prgama.foodcourt_microservice.application.handler.IAuthenticationHandler;
 import com.prgama.foodcourt_microservice.application.handler.IRestaurantHandler;
 import com.prgama.foodcourt_microservice.infrastructure.constants.ControllerConstants;
@@ -55,5 +57,16 @@ public class RestaurantRestControllerAdapter {
         authenticationHandler.authentication(token, ControllerConstants.ROLE_ADMIN);
         restaurantHandler.createRestaurant(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ControllerResponse(ControllerConstants.RESTAURANT_CREATED_MESSAGE, HttpStatus.CREATED.toString(), LocalDateTime.now()));
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<PaginationResponse<ListRestaurantsResponse>> listRestaurants(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @RequestParam(required = false) Integer pageNumber,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(defaultValue = "asc") String sortDirection
+    ) {
+        authenticationHandler.authentication(token, ControllerConstants.ROLE_CLIENT);
+        PaginationResponse<ListRestaurantsResponse> pagination = restaurantHandler.listRestaurants(pageNumber, pageSize, sortDirection);
+        return ResponseEntity.status(HttpStatus.OK).body(pagination);
     }
 }
