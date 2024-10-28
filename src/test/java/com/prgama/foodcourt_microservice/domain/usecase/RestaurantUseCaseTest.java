@@ -3,6 +3,7 @@ package com.prgama.foodcourt_microservice.domain.usecase;
 import com.prgama.foodcourt_microservice.domain.api.IUserServicePort;
 import com.prgama.foodcourt_microservice.domain.constants.ExceptionConstants;
 import com.prgama.foodcourt_microservice.domain.exception.*;
+import com.prgama.foodcourt_microservice.domain.model.Pagination;
 import com.prgama.foodcourt_microservice.domain.model.Restaurant;
 import com.prgama.foodcourt_microservice.domain.spi.IRestaurantPersistencePort;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -61,5 +64,77 @@ class RestaurantUseCaseTest {
         });
         assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.NOT_OWNER_MESSAGE);
         Mockito.verify(restaurantPersistencePort, Mockito.never()).createRestaurant(restaurant);
+    }
+
+    @Test
+    @DisplayName("List restaurants correctly")
+    void listRestaurants() {
+        Restaurant restaurant = new Restaurant(1L, "Frisby", "123456789", "Parque Arboleda Piso 4",
+                "+573233039679", "https://logo.url", 1L);
+        Pagination<Restaurant> pagination = new Pagination<>(List.of(restaurant), 0, 10, 1L);
+
+        Mockito.when(restaurantPersistencePort.listRestaurants(0, 10, "name", "asc")).thenReturn(pagination);
+
+        Pagination<Restaurant> result = restaurantUseCase.listRestaurants(0, 10, "asc");
+
+        assertNotNull(result, "The result shouldn't be null.");
+        assertFalse(result.getContent().isEmpty(), "The content shouldn't be empty.");
+        assertEquals(1, result.getContent().size(), "The number of restaurants should be 1.");
+
+        Restaurant returnedRestaurant = result.getContent().get(0);
+        assertEquals("Frisby", returnedRestaurant.getName(), "The restaurant's name should be Frisby.");
+        assertEquals("https://logo.url", returnedRestaurant.getUrlLogo(), "The restaurant's url logo should be https://logo.url");
+
+        Mockito.verify(restaurantPersistencePort, Mockito.times(1)).listRestaurants(0, 10, "name", "asc");
+    }
+
+    @Test
+    @DisplayName("Validation exception when page number is null")
+    void listRestaurantsShouldThrowValidationExceptionWhenPageNumberIsNull() {
+        InvalidPageNumberException exception = assertThrows(InvalidPageNumberException.class, () -> {
+            restaurantUseCase.listRestaurants(null, 10, "asc");
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.PAGE_NUMBER_MANDATORY_MESSAGE);
+        Mockito.verify(restaurantPersistencePort, Mockito.never()).listRestaurants(null, 10, "name", "asc");
+    }
+
+    @Test
+    @DisplayName("Validation exception when page number is a negative number")
+    void listRestaurantsShouldThrowValidationExceptionWhenPageNumberIsNegative() {
+        InvalidPageNumberException exception = assertThrows(InvalidPageNumberException.class, () -> {
+            restaurantUseCase.listRestaurants(-1, 10, "asc");
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.INVALID_PAGE_NUMBER_MESSAGE);
+        Mockito.verify(restaurantPersistencePort, Mockito.never()).listRestaurants(-1, 10, "name", "asc");
+    }
+
+    @Test
+    @DisplayName("Validation exception when page size is null")
+    void listRestaurantsShouldThrowValidationExceptionWhenPageSizeIsNull() {
+        InvalidPageSizeException exception = assertThrows(InvalidPageSizeException.class, () -> {
+            restaurantUseCase.listRestaurants(0, null, "asc");
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.PAGE_SIZE_MANDATORY_MESSAGE);
+        Mockito.verify(restaurantPersistencePort, Mockito.never()).listRestaurants(0, null, "name", "asc");
+    }
+
+    @Test
+    @DisplayName("Validation exception when page size is less than or equal to zero")
+    void listRestaurantsShouldThrowValidationExceptionWhenPageSizeIsLessThanOrEqualToZero() {
+        InvalidPageSizeException exception = assertThrows(InvalidPageSizeException.class, () -> {
+            restaurantUseCase.listRestaurants(0, 0, "asc");
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.INVALID_PAGE_SIZE_MESSAGE);
+        Mockito.verify(restaurantPersistencePort, Mockito.never()).listRestaurants(0, 0, "name", "asc");
+    }
+
+    @Test
+    @DisplayName("Validation exception when sort direction isn't 'asc' or 'desc'")
+    void listRestaurantsShouldThrowValidationExceptionWhenSortDirectionIsNotAscOrDesc() {
+        InvalidSortDirectionException exception = assertThrows(InvalidSortDirectionException.class, () -> {
+            restaurantUseCase.listRestaurants(0, 10, "order");
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.INVALID_SORT_DIRECTION_MESSAGE);
+        Mockito.verify(restaurantPersistencePort, Mockito.never()).listRestaurants(0, 10, "name", "order");
     }
 }

@@ -14,7 +14,6 @@ public class ExceptionConstants {
     public static final String INVALID_TOKEN_MESSAGE = "Invalid token.";
     public static final String INVALID_ROLE_MESSAGE = "Access denied. You don't have permission to access this resource.";
     public static final String UNAUTHORIZED_OWNER_MESSAGE = "You don't have permission to perform this action.";
-    public static final String SORT_DIRECTION_MANDATORY_MESSAGE = "Sort direction must be provided.";
     public static final String INVALID_SORT_DIRECTION_MESSAGE = "Sort direction must be 'asc' or 'desc'.";
     public static final String PAGE_NUMBER_MANDATORY_MESSAGE = "Page number must be provided.";
     public static final String INVALID_PAGE_NUMBER_MESSAGE = "Page number must be non-negative.";

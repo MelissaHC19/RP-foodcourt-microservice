@@ -56,9 +56,7 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         } else if (pageSize <= 0) {
             throw new InvalidPageSizeException(ExceptionConstants.INVALID_PAGE_SIZE_MESSAGE);
         }
-        if (sortDirection == null) {
-            throw new InvalidSortDirectionException(ExceptionConstants.SORT_DIRECTION_MANDATORY_MESSAGE);
-        } else if (!sortDirection.equalsIgnoreCase(PaginationConstants.SORT_DIRECTION_ASC) && !sortDirection.equalsIgnoreCase(PaginationConstants.SORT_DIRECTION_DESC)) {
+        if (!sortDirection.equalsIgnoreCase(PaginationConstants.SORT_DIRECTION_ASC) && !sortDirection.equalsIgnoreCase(PaginationConstants.SORT_DIRECTION_DESC)) {
             throw new InvalidSortDirectionException(ExceptionConstants.INVALID_SORT_DIRECTION_MESSAGE);
         }
     }
