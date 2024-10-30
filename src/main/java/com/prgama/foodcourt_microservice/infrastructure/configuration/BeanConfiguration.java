@@ -30,7 +30,6 @@ public class BeanConfiguration {
     private final IDishPageMapper dishPageMapper;
     private final IOrderEntityMapper orderEntityMapper;
     private final IOrderRepository orderRepository;
-    private final IOrderDishRepository orderDishRepository;
 
     @Bean
     public IRestaurantPersistencePort restaurantPersistencePort() {
@@ -69,7 +68,7 @@ public class BeanConfiguration {
 
     @Bean
     public IOrderPersistencePort orderPersistencePort() {
-        return new OrderJpaAdapter(orderRepository, orderDishRepository, orderEntityMapper);
+        return new OrderJpaAdapter(orderRepository, orderEntityMapper);
     }
 
     @Bean
