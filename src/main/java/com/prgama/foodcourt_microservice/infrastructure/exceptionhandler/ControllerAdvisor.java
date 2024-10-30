@@ -103,8 +103,8 @@ public class ControllerAdvisor {
 
     @ExceptionHandler(HasProcessingOrderException.class)
     public ResponseEntity<ExceptionResponse> handleHasProcessingOrderException(HasProcessingOrderException exception) {
-        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now());
-        return ResponseEntity.badRequest().body(response);
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.CONFLICT.toString(), LocalDateTime.now());
+        return ResponseEntity.status(409).body(response);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

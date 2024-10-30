@@ -20,8 +20,12 @@ public class DocumentationConstants {
     public static final String LIST_DISHES_SUMMARY = "List dishes per restaurant";
     public static final String LIST_DISHES_DESCRIPTION = "This endpoint retrieves a paginated list of dishes from an specific restaurant by providing page number, page size (number of elements per page) and sort direction (ascendant or descendant). It has an optional filter by category when providing the category id.";
 
+    public static final String CREATE_ORDER_SUMMARY = "Create order";
+    public static final String CREATE_ORDER_DESCRIPTION = "This endpoint allows the creation of new order. The dishes to order must be from the same restaurant and the client can only place one order at a time.";
+
     public static final String RESTAURANT_TAG = "Restaurant";
     public static final String DISH_TAG = "Dish";
+    public static final String ORDER_TAG = "Order";
 
     public static final String CREATED_STATUS_CODE = "201";
     public static final String BAD_REQUEST_STATUS_CODE = "400";
@@ -50,6 +54,11 @@ public class DocumentationConstants {
     public static final String BAD_REQUEST_RESPONSE_CODE_DESCRIPTION_PAGINATION = "Invalid parameters provided.";
     public static final String OK_RESPONSE_CODE_DESCRIPTION_PAGINATION_RESTAURANTS = "Successfully retrieved restaurants.";
     public static final String OK_RESPONSE_CODE_DESCRIPTION_PAGINATION_DISHES = "Successfully retrieved dishes from restaurant.";
+
+    public static final String CREATED_RESPONSE_CODE_DESCRIPTION_ORDER = "Order created successfully.";
+    public static final String CONFLICT_RESPONSE_CODE_DESCRIPTION_ORDER = "User already has processing orders.";
+    public static final String NOT_FOUND_RESPONSE_CODE_DESCRIPTION_ORDER = "Restaurant not found or doesn't exist.";
+    public static final String BAD_REQUEST_RESPONSE_CODE_DESCRIPTION_ORDER = "Order not created.";
 
     public static final String PAGE_NUMBER_PARAMETER = "Page number to retrieve (starting from 0)";
     public static final String PAGE_SIZE_PARAMETER_RESTAURANTS = "Number of restaurants per page";
