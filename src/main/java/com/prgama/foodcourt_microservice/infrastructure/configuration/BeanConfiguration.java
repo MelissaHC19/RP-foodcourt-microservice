@@ -1,26 +1,17 @@
 package com.prgama.foodcourt_microservice.infrastructure.configuration;
 
-import com.prgama.foodcourt_microservice.domain.api.IAuthenticationServicePort;
-import com.prgama.foodcourt_microservice.domain.api.IDishServicePort;
-import com.prgama.foodcourt_microservice.domain.api.IRestaurantServicePort;
-import com.prgama.foodcourt_microservice.domain.api.IUserServicePort;
-import com.prgama.foodcourt_microservice.domain.spi.ICategoryPersistencePort;
-import com.prgama.foodcourt_microservice.domain.spi.IDishPersistencePort;
-import com.prgama.foodcourt_microservice.domain.spi.IRestaurantPersistencePort;
-import com.prgama.foodcourt_microservice.domain.spi.ITokenProviderPort;
+import com.prgama.foodcourt_microservice.domain.api.*;
+import com.prgama.foodcourt_microservice.domain.spi.*;
 import com.prgama.foodcourt_microservice.domain.usecase.AuthenticationUseCase;
 import com.prgama.foodcourt_microservice.domain.usecase.DishUseCase;
+import com.prgama.foodcourt_microservice.domain.usecase.OrderUseCase;
 import com.prgama.foodcourt_microservice.domain.usecase.RestaurantUseCase;
 import com.prgama.foodcourt_microservice.infrastructure.output.jpa.adapter.CategoryJpaAdapter;
 import com.prgama.foodcourt_microservice.infrastructure.output.jpa.adapter.DishJpaAdapter;
+import com.prgama.foodcourt_microservice.infrastructure.output.jpa.adapter.OrderJpaAdapter;
 import com.prgama.foodcourt_microservice.infrastructure.output.jpa.adapter.RestaurantJpaAdapter;
-import com.prgama.foodcourt_microservice.infrastructure.output.jpa.mapper.IDishEntityMapper;
-import com.prgama.foodcourt_microservice.infrastructure.output.jpa.mapper.IDishPageMapper;
-import com.prgama.foodcourt_microservice.infrastructure.output.jpa.mapper.IRestaurantEntityMapper;
-import com.prgama.foodcourt_microservice.infrastructure.output.jpa.mapper.IRestaurantPageMapper;
-import com.prgama.foodcourt_microservice.infrastructure.output.jpa.repository.ICategoryRepository;
-import com.prgama.foodcourt_microservice.infrastructure.output.jpa.repository.IDishRepository;
-import com.prgama.foodcourt_microservice.infrastructure.output.jpa.repository.IRestaurantRepository;
+import com.prgama.foodcourt_microservice.infrastructure.output.jpa.mapper.*;
+import com.prgama.foodcourt_microservice.infrastructure.output.jpa.repository.*;
 import com.prgama.foodcourt_microservice.infrastructure.security.adapter.TokenAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -37,6 +28,8 @@ public class BeanConfiguration {
     private final ICategoryRepository categoryRepository;
     private final IRestaurantPageMapper restaurantPageMapper;
     private final IDishPageMapper dishPageMapper;
+    private final IOrderEntityMapper orderEntityMapper;
+    private final IOrderRepository orderRepository;
 
     @Bean
     public IRestaurantPersistencePort restaurantPersistencePort() {
@@ -71,5 +64,15 @@ public class BeanConfiguration {
     @Bean
     public IAuthenticationServicePort authenticationServicePort() {
         return new AuthenticationUseCase(tokenProviderPort());
+    }
+
+    @Bean
+    public IOrderPersistencePort orderPersistencePort() {
+        return new OrderJpaAdapter(orderRepository, orderEntityMapper);
+    }
+
+    @Bean
+    public IOrderServicePort orderServicePort() {
+        return new OrderUseCase(restaurantPersistencePort(), orderPersistencePort(), dishPersistencePort());
     }
 }
