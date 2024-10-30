@@ -95,6 +95,18 @@ public class ControllerAdvisor {
         return ResponseEntity.badRequest().body(response);
     }
 
+    @ExceptionHandler(DishNotFromRestaurantException.class)
+    public ResponseEntity<ExceptionResponse> handleDishNotFromRestaurantException(DishNotFromRestaurantException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now());
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(HasProcessingOrderException.class)
+    public ResponseEntity<ExceptionResponse> handleHasProcessingOrderException(HasProcessingOrderException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now());
+        return ResponseEntity.badRequest().body(response);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptionsDTO(MethodArgumentNotValidException exception) {
         ArrayList<String> errors = new ArrayList<>();
