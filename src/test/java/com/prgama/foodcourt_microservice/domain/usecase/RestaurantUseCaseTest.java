@@ -137,4 +137,45 @@ class RestaurantUseCaseTest {
         assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.INVALID_SORT_DIRECTION_MESSAGE);
         Mockito.verify(restaurantPersistencePort, Mockito.never()).listRestaurants(0, 10, "name", "order");
     }
+
+    @Test
+    @DisplayName("Validation when owner is creating an employee. In this case restaurant exists and belongs to the owner creating the employee")
+    void getRestaurantByIdReturnsTrueWhenRestaurantBelongsToOwner() {
+        Long restaurantId = 1L;
+        Long ownerId = 10L;
+        Restaurant restaurant = new Restaurant(1L, null, null, null, null, null, 10L);
+        Mockito.when(restaurantPersistencePort.getRestaurant(restaurantId)).thenReturn(restaurant);
+
+        boolean result = restaurantUseCase.getRestaurantById(restaurantId, ownerId);
+
+        assertTrue(result);
+        Mockito.verify(restaurantPersistencePort, Mockito.times(1)).getRestaurant(restaurantId);
+    }
+
+    @Test
+    @DisplayName("Validation when owner is creating an employee. In this case restaurant exists, but doesn't belongs to the owner creating the employee")
+    void getRestaurantByIdReturnsFalseWhenRestaurantDoesNotBelongToOwner() {
+        Long restaurantId = 1L;
+        Long ownerId = 10L;
+        Restaurant restaurant = new Restaurant(1L, null, null, null, null, null, 20L);
+        Mockito.when(restaurantPersistencePort.getRestaurant(restaurantId)).thenReturn(restaurant);
+
+        boolean result = restaurantUseCase.getRestaurantById(restaurantId, ownerId);
+
+        assertFalse(result);
+        Mockito.verify(restaurantPersistencePort, Mockito.times(1)).getRestaurant(restaurantId);
+    }
+
+    @Test
+    @DisplayName("Validation when owner is creating an employee. In this case restaurant doesn't exists")
+    void getRestaurantByIdReturnsFalseWhenRestaurantDoesNotExists() {
+        Long restaurantId = 1L;
+        Long ownerId = 10L;
+        Mockito.when(restaurantPersistencePort.getRestaurant(restaurantId)).thenReturn(null);
+
+        boolean result = restaurantUseCase.getRestaurantById(restaurantId, ownerId);
+
+        assertFalse(result);
+        Mockito.verify(restaurantPersistencePort, Mockito.times(1)).getRestaurant(restaurantId);
+    }
 }
