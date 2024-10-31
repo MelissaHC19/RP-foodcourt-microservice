@@ -30,6 +30,7 @@ public class BeanConfiguration {
     private final IDishPageMapper dishPageMapper;
     private final IOrderEntityMapper orderEntityMapper;
     private final IOrderRepository orderRepository;
+    private final IOrderPageMapper orderPageMapper;
 
     @Bean
     public IRestaurantPersistencePort restaurantPersistencePort() {
@@ -68,11 +69,11 @@ public class BeanConfiguration {
 
     @Bean
     public IOrderPersistencePort orderPersistencePort() {
-        return new OrderJpaAdapter(orderRepository, orderEntityMapper);
+        return new OrderJpaAdapter(orderRepository, orderEntityMapper, orderPageMapper);
     }
 
     @Bean
     public IOrderServicePort orderServicePort() {
-        return new OrderUseCase(restaurantPersistencePort(), orderPersistencePort(), dishPersistencePort());
+        return new OrderUseCase(restaurantPersistencePort(), orderPersistencePort(), dishPersistencePort(), userServicePort);
     }
 }

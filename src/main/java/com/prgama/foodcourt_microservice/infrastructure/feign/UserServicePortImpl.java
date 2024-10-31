@@ -1,5 +1,6 @@
 package com.prgama.foodcourt_microservice.infrastructure.feign;
 
+import com.prgama.foodcourt_microservice.application.dto.request.GetEmployeesRestaurantRequest;
 import com.prgama.foodcourt_microservice.application.dto.request.GetUserRequest;
 import com.prgama.foodcourt_microservice.domain.api.IUserServicePort;
 import lombok.RequiredArgsConstructor;
@@ -14,5 +15,11 @@ public class UserServicePortImpl implements IUserServicePort {
     public boolean getUserById(Long id) {
         GetUserRequest userRequest = userFeign.getUserById(id);
         return userRequest.isRoleValidation();
+    }
+
+    @Override
+    public Long getEmployeesRestaurant(Long employeeId) {
+        GetEmployeesRestaurantRequest employeesRestaurantRequest = userFeign.getEmployeesRestaurantId(employeeId);
+        return employeesRestaurantRequest.getRestaurantId();
     }
 }

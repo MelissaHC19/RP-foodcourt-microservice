@@ -1,6 +1,7 @@
 package com.prgama.foodcourt_microservice.application.handler;
 
 import com.prgama.foodcourt_microservice.application.dto.request.CreateRestaurantRequest;
+import com.prgama.foodcourt_microservice.application.dto.response.GetRestaurantResponse;
 import com.prgama.foodcourt_microservice.application.dto.response.ListRestaurantsResponse;
 import com.prgama.foodcourt_microservice.application.dto.response.PaginationResponse;
 import com.prgama.foodcourt_microservice.application.mapper.ICreateRestaurantRequestMapper;
@@ -30,5 +31,10 @@ public class RestaurantHandler implements IRestaurantHandler {
     public PaginationResponse<ListRestaurantsResponse> listRestaurants(Integer pageNumber, Integer pageSize, String sortDirection) {
         Pagination<Restaurant> pagination = restaurantServicePort.listRestaurants(pageNumber, pageSize, sortDirection);
         return listRestaurantsResponseMapper.paginationToPaginationResponse(pagination);
+    }
+
+    @Override
+    public GetRestaurantResponse getRestaurantById(Long restaurantId, Long ownerId) {
+        return new GetRestaurantResponse(restaurantServicePort.getRestaurantById(restaurantId, ownerId));
     }
 }

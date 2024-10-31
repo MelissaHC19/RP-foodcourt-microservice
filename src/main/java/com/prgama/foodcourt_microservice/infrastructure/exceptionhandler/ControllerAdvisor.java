@@ -107,6 +107,12 @@ public class ControllerAdvisor {
         return ResponseEntity.status(409).body(response);
     }
 
+    @ExceptionHandler(InvalidOrderStatusException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidOrderStatusException(InvalidOrderStatusException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now());
+        return ResponseEntity.badRequest().body(response);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptionsDTO(MethodArgumentNotValidException exception) {
         ArrayList<String> errors = new ArrayList<>();

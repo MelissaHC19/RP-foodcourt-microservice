@@ -6,5 +6,5 @@ public class FeignConstants {
     }
 
     public static final String FEIGN_CLIENT_NAME = "users-microservice";
-    public static final String FEIGN_CLIENT_URL = "localhost:8080/user/owner";
+    public static final String FEIGN_CLIENT_URL = "localhost:8080/user";
 }

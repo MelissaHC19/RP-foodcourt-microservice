@@ -21,4 +21,5 @@ public class ExceptionConstants {
     public static final String INVALID_PAGE_SIZE_MESSAGE = "Page size must be greater than zero.";
     public static final String HAS_PROCESSING_ORDER_MESSAGE = "User already has an order in process.";
     public static final String DISH_NOT_FROM_RESTAURANT_MESSAGE = "Can't order dishes from different restaurants.";
+    public static final String INVALID_ORDER_STATUS_MESSAGE = "Order status options: 'Pending', 'Preparing', 'Ready', 'Delivered' or 'Canceled'.";
 }
