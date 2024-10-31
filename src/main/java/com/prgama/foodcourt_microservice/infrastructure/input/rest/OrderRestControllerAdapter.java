@@ -9,6 +9,7 @@ import com.prgama.foodcourt_microservice.application.handler.IOrderHandler;
 import com.prgama.foodcourt_microservice.infrastructure.constants.ControllerConstants;
 import com.prgama.foodcourt_microservice.infrastructure.constants.DocumentationConstants;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -74,9 +75,13 @@ public class OrderRestControllerAdapter {
     @GetMapping("/list")
     public ResponseEntity<PaginationResponse<ListOrdersResponse>> listOrders(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @Parameter(description = DocumentationConstants.STATUS_PARAMETER)
             @RequestParam(required = false) String status,
+            @Parameter(description = DocumentationConstants.PAGE_NUMBER_PARAMETER)
             @RequestParam(required = false) Integer pageNumber,
+            @Parameter(description = DocumentationConstants.PAGE_SIZE_PARAMETER_ORDERS)
             @RequestParam(required = false) Integer pageSize,
+            @Parameter(description = DocumentationConstants.SORT_DIRECTION_PARAMETER)
             @RequestParam(defaultValue = ControllerConstants.DEFAULT_SORT_DIRECTION) String sortDirection
     ) {
         Long employeeId = authenticationHandler.authenticationForDish(token, ControllerConstants.ROLE_EMPLOYEE);

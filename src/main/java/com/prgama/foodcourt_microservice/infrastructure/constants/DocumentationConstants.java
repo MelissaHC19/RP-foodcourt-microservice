@@ -72,6 +72,8 @@ public class DocumentationConstants {
     public static final String PAGE_NUMBER_PARAMETER = "Page number to retrieve (starting from 0)";
     public static final String PAGE_SIZE_PARAMETER_RESTAURANTS = "Number of restaurants per page";
     public static final String PAGE_SIZE_PARAMETER_DISHES = "Number of dishes per page";
+    public static final String PAGE_SIZE_PARAMETER_ORDERS = "Number of orders per page";
     public static final String SORT_DIRECTION_PARAMETER = "Sorting order 'asc' or 'desc'";
     public static final String CATEGORY_ID_PARAMETER = "(Optional) If specified, filter dishes by the category id. If omitted, all dishes from the restaurant are returned";
+    public static final String STATUS_PARAMETER = "Filter orders by order status. Order status options: 'Pending', 'Preparing', 'Ready', 'Delivered' or 'Canceled'.";
 }
