@@ -2,6 +2,8 @@ package com.prgama.foodcourt_microservice.infrastructure.input.rest;
 
 import com.prgama.foodcourt_microservice.application.dto.request.CreateOrderRequest;
 import com.prgama.foodcourt_microservice.application.dto.response.ControllerResponse;
+import com.prgama.foodcourt_microservice.application.dto.response.ListOrdersResponse;
+import com.prgama.foodcourt_microservice.application.dto.response.PaginationResponse;
 import com.prgama.foodcourt_microservice.application.handler.IAuthenticationHandler;
 import com.prgama.foodcourt_microservice.application.handler.IOrderHandler;
 import com.prgama.foodcourt_microservice.infrastructure.constants.ControllerConstants;
@@ -51,9 +53,22 @@ public class OrderRestControllerAdapter {
                     content = @Content),
     })
     @PostMapping
-    private ResponseEntity<ControllerResponse> createOrder(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid @RequestBody CreateOrderRequest request) {
+    public ResponseEntity<ControllerResponse> createOrder(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid @RequestBody CreateOrderRequest request) {
         Long clientId = authenticationHandler.authenticationForDish(token, ControllerConstants.ROLE_CLIENT);
         orderHandler.createOrder(request, clientId);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ControllerResponse(ControllerConstants.ORDER_CREATED_MESSAGE, HttpStatus.CREATED.toString(), LocalDateTime.now()));
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<PaginationResponse<ListOrdersResponse>> listOrders(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) Integer pageNumber,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(defaultValue = ControllerConstants.DEFAULT_SORT_DIRECTION) String sortDirection
+    ) {
+        Long employeeId = authenticationHandler.authenticationForDish(token, ControllerConstants.ROLE_EMPLOYEE);
+        PaginationResponse<ListOrdersResponse> pagination = orderHandler.listOrders(employeeId, status, pageNumber, pageSize, sortDirection);
+        return ResponseEntity.status(HttpStatus.OK).body(pagination);
     }
 }

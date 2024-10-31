@@ -2,12 +2,17 @@ package com.prgama.foodcourt_microservice.infrastructure.output.jpa.adapter;
 
 import com.prgama.foodcourt_microservice.domain.constants.OrderStatusConstants;
 import com.prgama.foodcourt_microservice.domain.model.Order;
+import com.prgama.foodcourt_microservice.domain.model.Pagination;
 import com.prgama.foodcourt_microservice.domain.spi.IOrderPersistencePort;
 import com.prgama.foodcourt_microservice.infrastructure.output.jpa.entity.OrderDishEntity;
 import com.prgama.foodcourt_microservice.infrastructure.output.jpa.entity.OrderEntity;
 import com.prgama.foodcourt_microservice.infrastructure.output.jpa.mapper.IOrderEntityMapper;
+import com.prgama.foodcourt_microservice.infrastructure.output.jpa.mapper.IOrderPageMapper;
 import com.prgama.foodcourt_microservice.infrastructure.output.jpa.repository.IOrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -15,6 +20,7 @@ import java.util.List;
 public class OrderJpaAdapter implements IOrderPersistencePort {
     private final IOrderRepository orderRepository;
     private final IOrderEntityMapper orderEntityMapper;
+    private final IOrderPageMapper orderPageMapper;
 
     @Override
     public void createOrder(Order order) {
@@ -45,5 +51,15 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
             }
         }
         return false;
+    }
+
+    @Override
+    public Pagination<Order> listOrdersByRestaurantAndStatus(Long restaurantId, String orderStatus, Integer pageNumber, Integer pageSize, String sortBy, String sortDirection) {
+        Sort sort = Sort.by(Sort.Order.by(sortBy).with(Sort.Direction.fromString(sortDirection)));
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);
+
+        Page<OrderEntity> page = orderRepository.findAllByRestaurantIdAndStatus(restaurantId, orderStatus, pageRequest);
+
+        return orderPageMapper.pageToPagination(page, orderEntityMapper);
     }
 }

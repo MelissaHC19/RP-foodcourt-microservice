@@ -2,6 +2,7 @@ package com.prgama.foodcourt_microservice.infrastructure.input.rest;
 
 import com.prgama.foodcourt_microservice.application.dto.request.CreateRestaurantRequest;
 import com.prgama.foodcourt_microservice.application.dto.response.ControllerResponse;
+import com.prgama.foodcourt_microservice.application.dto.response.GetRestaurantResponse;
 import com.prgama.foodcourt_microservice.application.dto.response.ListRestaurantsResponse;
 import com.prgama.foodcourt_microservice.application.dto.response.PaginationResponse;
 import com.prgama.foodcourt_microservice.application.handler.IAuthenticationHandler;
@@ -85,5 +86,10 @@ public class RestaurantRestControllerAdapter {
         authenticationHandler.authentication(token, ControllerConstants.ROLE_CLIENT);
         PaginationResponse<ListRestaurantsResponse> pagination = restaurantHandler.listRestaurants(pageNumber, pageSize, sortDirection);
         return ResponseEntity.status(HttpStatus.OK).body(pagination);
+    }
+
+    @GetMapping("/{id}/{ownerId}")
+    public ResponseEntity<GetRestaurantResponse> getRestaurantById(@PathVariable Long id, @PathVariable Long ownerId) {
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantHandler.getRestaurantById(id, ownerId));
     }
 }

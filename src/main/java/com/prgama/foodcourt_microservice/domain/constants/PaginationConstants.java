@@ -6,6 +6,7 @@ public class PaginationConstants {
     }
 
     public static final String SORT_BY_NAME = "name";
+    public static final String SORT_BY_ID = "id";
     public static final String SORT_DIRECTION_ASC = "asc";
     public static final String SORT_DIRECTION_DESC = "desc";
 }

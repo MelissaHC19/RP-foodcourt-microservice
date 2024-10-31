@@ -11,9 +11,9 @@ import java.util.Optional;
 public interface IDishRepository extends JpaRepository<DishEntity, Long> {
     Optional<DishEntity> findByName(String name);
 
-    @Query("SELECT d FROM DishEntity d WHERE d.restaurantId.id = :restaurantId")
+    @Query("SELECT dish FROM DishEntity dish WHERE dish.restaurantId.id = :restaurantId")
     Page<DishEntity> findAllByRestaurantId(Long restaurantId, PageRequest pageRequest);
 
-    @Query("SELECT d FROM DishEntity d WHERE d.restaurantId.id = :restaurantId AND d.categoryId.id = :categoryId")
+    @Query("SELECT dish FROM DishEntity dish WHERE dish.restaurantId.id = :restaurantId AND dish.categoryId.id = :categoryId")
     Page<DishEntity> findAllByRestaurantIdAndCategoryId(Long categoryId, Long restaurantId, PageRequest pageRequest);
 }
