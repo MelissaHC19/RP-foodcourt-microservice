@@ -59,6 +59,18 @@ public class OrderRestControllerAdapter {
         return ResponseEntity.status(HttpStatus.CREATED).body(new ControllerResponse(ControllerConstants.ORDER_CREATED_MESSAGE, HttpStatus.CREATED.toString(), LocalDateTime.now()));
     }
 
+    @Operation(summary = DocumentationConstants.LIST_ORDERS_SUMMARY,
+            tags = {DocumentationConstants.ORDER_TAG, DocumentationConstants.RESTAURANT_TAG},
+            description = DocumentationConstants.LIST_ORDERS_DESCRIPTION
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = DocumentationConstants.OK_STATUS_CODE,
+                    description = DocumentationConstants.OK_RESPONSE_CODE_DESCRIPTION_PAGINATION_ORDERS,
+                    content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.BAD_REQUEST_STATUS_CODE,
+                    description = DocumentationConstants.BAD_REQUEST_RESPONSE_CODE_DESCRIPTION_PAGINATION,
+                    content = @Content),
+    })
     @GetMapping("/list")
     public ResponseEntity<PaginationResponse<ListOrdersResponse>> listOrders(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,

@@ -23,6 +23,12 @@ public class DocumentationConstants {
     public static final String CREATE_ORDER_SUMMARY = "Create order";
     public static final String CREATE_ORDER_DESCRIPTION = "This endpoint allows the creation of new order. The dishes to order must be from the same restaurant and the client can only place one order at a time.";
 
+    public static final String GET_RESTAURANT_BY_ID_SUMMARY = "Get restaurant id";
+    public static final String GET_RESTAURANT_BY_ID_DESCRIPTION = "This endpoint returns true when the user is the owner of the restaurant and returns false when the restaurant doesn't exist or the user isn't the owner of the restaurant.";
+
+    public static final String LIST_ORDERS_SUMMARY = "List orders per restaurant and order status";
+    public static final String LIST_ORDERS_DESCRIPTION = "This endpoint retrieves a paginated list of orders from an specific restaurant by providing page number, page size (number of elements per page) and sort direction (ascendant or descendant). It has a filter by order status which include: Pending, Preparing, Ready, Delivered and Canceled. You must specify which order status you want to filter by.";
+
     public static final String RESTAURANT_TAG = "Restaurant";
     public static final String DISH_TAG = "Dish";
     public static final String ORDER_TAG = "Order";
@@ -59,6 +65,9 @@ public class DocumentationConstants {
     public static final String CONFLICT_RESPONSE_CODE_DESCRIPTION_ORDER = "User already has processing orders.";
     public static final String NOT_FOUND_RESPONSE_CODE_DESCRIPTION_ORDER = "Restaurant not found or doesn't exist.";
     public static final String BAD_REQUEST_RESPONSE_CODE_DESCRIPTION_ORDER = "Order not created.";
+    public static final String OK_RESPONSE_CODE_DESCRIPTION_PAGINATION_ORDERS = "Successfully retrieved orders from restaurant.";
+
+    public static final String OK_RESPONSE_CODE_DESCRIPTION_RESTAURANT = "The request was successful, and the restaurant's validation is returned.";
 
     public static final String PAGE_NUMBER_PARAMETER = "Page number to retrieve (starting from 0)";
     public static final String PAGE_SIZE_PARAMETER_RESTAURANTS = "Number of restaurants per page";

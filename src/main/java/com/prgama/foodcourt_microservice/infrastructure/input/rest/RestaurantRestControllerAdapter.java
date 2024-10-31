@@ -88,6 +88,15 @@ public class RestaurantRestControllerAdapter {
         return ResponseEntity.status(HttpStatus.OK).body(pagination);
     }
 
+    @Operation(summary = DocumentationConstants.GET_RESTAURANT_BY_ID_SUMMARY,
+            tags = {DocumentationConstants.RESTAURANT_TAG},
+            description = DocumentationConstants.GET_RESTAURANT_BY_ID_DESCRIPTION
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = DocumentationConstants.OK_STATUS_CODE,
+                    description = DocumentationConstants.OK_RESPONSE_CODE_DESCRIPTION_RESTAURANT,
+                    content = @Content),
+    })
     @GetMapping("/{id}/{ownerId}")
     public ResponseEntity<GetRestaurantResponse> getRestaurantById(@PathVariable Long id, @PathVariable Long ownerId) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantHandler.getRestaurantById(id, ownerId));
