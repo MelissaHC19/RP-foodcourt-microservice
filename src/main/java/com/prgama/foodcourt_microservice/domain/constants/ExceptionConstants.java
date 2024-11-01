@@ -22,4 +22,7 @@ public class ExceptionConstants {
     public static final String HAS_PROCESSING_ORDER_MESSAGE = "User already has an order in process.";
     public static final String DISH_NOT_FROM_RESTAURANT_MESSAGE = "Can't order dishes from different restaurants.";
     public static final String INVALID_ORDER_STATUS_MESSAGE = "Order status options: 'Pending', 'Preparing', 'Ready', 'Delivered' or 'Canceled'.";
+    public static final String ORDER_NOT_FOUND_MESSAGE = "Order not found or doesn't exists.";
+    public static final String UNAUTHORIZED_EMPLOYEE_MESSAGE = "Employee can't assign an order from a restaurant he doesn't work for.";
+    public static final String ORDER_NOT_PENDING_MESSAGE = "Can't assign to order, since it doesn't have 'Pending' status.";
 }

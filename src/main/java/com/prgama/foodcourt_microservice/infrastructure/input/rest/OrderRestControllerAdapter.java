@@ -88,4 +88,11 @@ public class OrderRestControllerAdapter {
         PaginationResponse<ListOrdersResponse> pagination = orderHandler.listOrders(employeeId, status, pageNumber, pageSize, sortDirection);
         return ResponseEntity.status(HttpStatus.OK).body(pagination);
     }
+
+    @PatchMapping("/{orderId}/assign")
+    public ResponseEntity<ControllerResponse> assignOrderToEmployee(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable Long orderId) {
+        Long employeeId = authenticationHandler.authenticationForDish(token, ControllerConstants.ROLE_EMPLOYEE);
+        orderHandler.assignOrderToEmployee(employeeId, orderId);
+        return ResponseEntity.status(HttpStatus.OK).body(new ControllerResponse(ControllerConstants.ORDER_ASSIGNED_TO_EMPLOYEE_MESSAGE, HttpStatus.OK.toString(), LocalDateTime.now()));
+    }
 }

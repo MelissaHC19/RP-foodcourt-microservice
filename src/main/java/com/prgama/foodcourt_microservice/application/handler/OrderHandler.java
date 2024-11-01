@@ -31,4 +31,9 @@ public class OrderHandler implements IOrderHandler {
         Pagination<Order> pagination = orderServicePort.listOrdersByRestaurantAndStatus(employeeId, orderStatus, pageNumber, pageSize, sortDirection);
         return listOrdersResponseMapper.paginationToPaginationResponse(pagination);
     }
+
+    @Override
+    public void assignOrderToEmployee(Long employeeId, Long orderId) {
+        orderServicePort.assignOrderToEmployee(employeeId, orderId);
+    }
 }

@@ -50,6 +50,19 @@ public class OrderUseCase implements IOrderServicePort {
         return orderPersistencePort.listOrdersByRestaurantAndStatus(restaurantId, orderStatus, pageNumber, pageSize, PaginationConstants.SORT_BY_ID, sortDirection);
     }
 
+    @Override
+    public void assignOrderToEmployee(Long employeeId, Long orderId) {
+        Order order = orderPersistencePort.findOrderById(orderId);
+        validateOrderExistence(order);
+        Long employeesRestaurantId = userServicePort.getEmployeesRestaurant(employeeId);
+        validateIfEmployeeWorksForOrderRestaurant(employeesRestaurantId, order.getRestaurant().getId());
+        validateIfOrderInPendingStatus(order.getStatus());
+        order.setEmployeeId(employeeId);
+        order.setStatus(OrderStatusConstants.PREPARING_STATUS);
+        System.out.println(order.getId());
+        orderPersistencePort.updateOrderAssignEmployee(order);
+    }
+
     private void validateRestaurantExistence(Order order) {
         if (!restaurantPersistencePort.alreadyExistsById(order.getRestaurant().getId())) {
             throw new RestaurantNotFoundException(ExceptionConstants.RESTAURANT_NOT_FOUND_MESSAGE);
@@ -98,6 +111,24 @@ public class OrderUseCase implements IOrderServicePort {
         }
         if (!sortDirection.equalsIgnoreCase(PaginationConstants.SORT_DIRECTION_ASC) && !sortDirection.equalsIgnoreCase(PaginationConstants.SORT_DIRECTION_DESC)) {
             throw new InvalidSortDirectionException(ExceptionConstants.INVALID_SORT_DIRECTION_MESSAGE);
+        }
+    }
+
+    private void validateOrderExistence(Order order) {
+        if (order == null) {
+            throw new OrderNotFoundException(ExceptionConstants.ORDER_NOT_FOUND_MESSAGE);
+        }
+    }
+
+    private void validateIfEmployeeWorksForOrderRestaurant(Long employeesRestaurantId, Long orderRestaurantId) {
+        if (!Objects.equals(employeesRestaurantId, orderRestaurantId)) {
+            throw new UnauthorizedEmployeeException(ExceptionConstants.UNAUTHORIZED_EMPLOYEE_MESSAGE);
+        }
+    }
+
+    private void validateIfOrderInPendingStatus(String orderStatus) {
+        if (!Objects.equals(orderStatus, OrderStatusConstants.PENDING_STATUS)) {
+            throw new OrderNotPendingException(ExceptionConstants.ORDER_NOT_PENDING_MESSAGE);
         }
     }
 }
