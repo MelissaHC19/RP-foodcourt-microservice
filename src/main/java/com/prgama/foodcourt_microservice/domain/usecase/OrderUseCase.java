@@ -59,7 +59,6 @@ public class OrderUseCase implements IOrderServicePort {
         validateIfOrderInPendingStatus(order.getStatus());
         order.setEmployeeId(employeeId);
         order.setStatus(OrderStatusConstants.PREPARING_STATUS);
-        System.out.println(order.getId());
         orderPersistencePort.updateOrderAssignEmployee(order);
     }
 

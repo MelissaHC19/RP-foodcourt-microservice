@@ -89,6 +89,27 @@ public class OrderRestControllerAdapter {
         return ResponseEntity.status(HttpStatus.OK).body(pagination);
     }
 
+    @Operation(summary = DocumentationConstants.ASSIGN_ORDER_TO_EMPLOYEE_SUMMARY,
+            tags = {DocumentationConstants.ORDER_TAG},
+            description = DocumentationConstants.ASSIGN_ORDER_TO_EMPLOYEE_DESCRIPTION
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = DocumentationConstants.OK_STATUS_CODE,
+                    description = DocumentationConstants.OK_RESPONSE_CODE_DESCRIPTION_ORDER,
+                    content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.NOT_FOUND_STATUS_CODE,
+                    description = DocumentationConstants.NOT_FOUND_RESPONSE_CODE_DESCRIPTION_ORDER_ASSIGN,
+                    content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.FORBIDDEN_STATUS_CODE,
+                    description = DocumentationConstants.FORBIDDEN_RESPONSE_CODE_DESCRIPTION,
+                    content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.UNAUTHORIZED_STATUS_CODE,
+                    description = DocumentationConstants.UNAUTHORIZED_RESPONSE_CODE_DESCRIPTION,
+                    content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.CONFLICT_STATUS_CODE,
+                    description = DocumentationConstants.CONFLICT_RESPONSE_CODE_DESCRIPTION_ORDER_ASSIGN,
+                    content = @Content),
+    })
     @PatchMapping("/{orderId}/assign")
     public ResponseEntity<ControllerResponse> assignOrderToEmployee(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable Long orderId) {
         Long employeeId = authenticationHandler.authenticationForDish(token, ControllerConstants.ROLE_EMPLOYEE);

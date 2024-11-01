@@ -29,6 +29,9 @@ public class DocumentationConstants {
     public static final String LIST_ORDERS_SUMMARY = "List orders per restaurant and order status";
     public static final String LIST_ORDERS_DESCRIPTION = "This endpoint retrieves a paginated list of orders from an specific restaurant by providing page number, page size (number of elements per page) and sort direction (ascendant or descendant). It has a filter by order status which include: Pending, Preparing, Ready, Delivered and Canceled. You must specify which order status you want to filter by.";
 
+    public static final String ASSIGN_ORDER_TO_EMPLOYEE_SUMMARY = "Assign order to employee";
+    public static final String ASSIGN_ORDER_TO_EMPLOYEE_DESCRIPTION = "This endpoint allows an employee to get an order assigned, only when it has a 'Pending' status.";
+
     public static final String RESTAURANT_TAG = "Restaurant";
     public static final String DISH_TAG = "Dish";
     public static final String ORDER_TAG = "Order";
@@ -68,6 +71,10 @@ public class DocumentationConstants {
     public static final String OK_RESPONSE_CODE_DESCRIPTION_PAGINATION_ORDERS = "Successfully retrieved orders from restaurant.";
 
     public static final String OK_RESPONSE_CODE_DESCRIPTION_RESTAURANT = "The request was successful, and the restaurant's validation is returned.";
+
+    public static final String OK_RESPONSE_CODE_DESCRIPTION_ORDER = "Order assigned to employee successfully.";
+    public static final String NOT_FOUND_RESPONSE_CODE_DESCRIPTION_ORDER_ASSIGN = "Order not found or doesn't exist.";
+    public static final String CONFLICT_RESPONSE_CODE_DESCRIPTION_ORDER_ASSIGN = "Order doesn't have Pending status, and can't be assigned to employee.";
 
     public static final String PAGE_NUMBER_PARAMETER = "Page number to retrieve (starting from 0)";
     public static final String PAGE_SIZE_PARAMETER_RESTAURANTS = "Number of restaurants per page";
