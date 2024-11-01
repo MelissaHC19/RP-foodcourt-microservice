@@ -62,4 +62,14 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
 
         return orderPageMapper.pageToPagination(page, orderEntityMapper);
     }
+
+    @Override
+    public void updateOrderAssignEmployee(Order order) {
+        orderRepository.save(orderEntityMapper.orderToEntity(order));
+    }
+
+    @Override
+    public Order findOrderById(Long id) {
+        return orderEntityMapper.orderEntityToOrder(orderRepository.findById(id).orElse(null));
+    }
 }

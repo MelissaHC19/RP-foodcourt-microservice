@@ -18,7 +18,7 @@ public class OrderDishEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orderId", nullable = false)
+    @JoinColumn(name = "orderId")
     private OrderEntity order;
 
     @ManyToOne(fetch = FetchType.EAGER)

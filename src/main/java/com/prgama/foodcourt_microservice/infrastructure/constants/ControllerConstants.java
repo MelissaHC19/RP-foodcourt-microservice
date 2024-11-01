@@ -17,6 +17,8 @@ public class ControllerConstants {
 
     public static final String ORDER_CREATED_MESSAGE = "Order created successfully.";
 
+    public static final String ORDER_ASSIGNED_TO_EMPLOYEE_MESSAGE = "Order assigned to employee successfully.";
+
     public static final String ROLE_ADMIN = "Admin";
     public static final String ROLE_OWNER = "Owner";
     public static final String ROLE_CLIENT = "Client";

@@ -113,6 +113,24 @@ public class ControllerAdvisor {
         return ResponseEntity.badRequest().body(response);
     }
 
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleOrderNotFoundException(OrderNotFoundException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.NOT_FOUND.toString(), LocalDateTime.now());
+        return ResponseEntity.status(404).body(response);
+    }
+
+    @ExceptionHandler(OrderNotPendingException.class)
+    public ResponseEntity<ExceptionResponse> handleOrderNotPendingException(OrderNotPendingException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.CONFLICT.toString(), LocalDateTime.now());
+        return ResponseEntity.status(409).body(response);
+    }
+
+    @ExceptionHandler(UnauthorizedEmployeeException.class)
+    public ResponseEntity<ExceptionResponse> handleUnauthorizedEmployeeException(UnauthorizedEmployeeException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.FORBIDDEN.toString(), LocalDateTime.now());
+        return ResponseEntity.status(403).body(response);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptionsDTO(MethodArgumentNotValidException exception) {
         ArrayList<String> errors = new ArrayList<>();

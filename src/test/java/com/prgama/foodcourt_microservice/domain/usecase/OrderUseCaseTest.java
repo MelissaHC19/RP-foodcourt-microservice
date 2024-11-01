@@ -202,4 +202,80 @@ class OrderUseCaseTest {
         assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.INVALID_SORT_DIRECTION_MESSAGE);
         Mockito.verify(orderPersistencePort, Mockito.never()).listOrdersByRestaurantAndStatus(1L, "Pending", 0, 10, "id", "order");
     }
+
+    @Test
+    @DisplayName("Order assigned to employee successfully and order status updated to 'Preparing'")
+    void assignOrderToEmployee() {
+        Long employeeId = 1L;
+        Long orderId = 2L;
+        Restaurant restaurant = new Restaurant(1L, null, null, null, null, null, null);
+        Order order = new Order(orderId, 3L, LocalDateTime.now(), "Pending", null, restaurant, null);
+
+        Mockito.when(orderPersistencePort.findOrderById(orderId)).thenReturn(order);
+        Mockito.when(userServicePort.getEmployeesRestaurant(employeeId)).thenReturn(restaurant.getId());
+
+        orderUseCase.assignOrderToEmployee(employeeId, orderId);
+
+        Mockito.verify(orderPersistencePort, Mockito.times(1)).findOrderById(orderId);
+        Mockito.verify(userServicePort, Mockito.times(1)).getEmployeesRestaurant(employeeId);
+        Mockito.verify(orderPersistencePort, Mockito.times(1)).updateOrderAssignEmployee(order);
+        assertEquals("Preparing", order.getStatus());
+        assertEquals(employeeId, order.getEmployeeId());
+    }
+
+    @Test
+    @DisplayName("Validation exception when order not found or doesn't exist")
+    void assignOrderToEmployeeShouldThrowValidationExceptionWhenOrderNotFound(){
+        Long employeeId = 1L;
+        Long orderId = 2L;
+        Mockito.when(orderPersistencePort.findOrderById(orderId)).thenReturn(null);
+
+        OrderNotFoundException exception = assertThrows(OrderNotFoundException.class, () -> {
+            orderUseCase.assignOrderToEmployee(employeeId, orderId);
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.ORDER_NOT_FOUND_MESSAGE);
+        Mockito.verify(orderPersistencePort, Mockito.times(1)).findOrderById(orderId);
+        Mockito.verify(orderPersistencePort, Mockito.never()).updateOrderAssignEmployee(null);
+    }
+
+    @Test
+    @DisplayName("Validation exception when employee doesn't work for the order's restaurant")
+    void assignOrderToEmployeeShouldThrowValidationExceptionWhenEmployeeNotFromOrderRestaurant(){
+        Long employeeId = 1L;
+        Long orderId = 2L;
+        Long employeeRestaurantId = 3L;
+        Restaurant restaurant = new Restaurant(1L, null, null, null, null, null, null);
+        Order order = new Order(orderId, 3L, LocalDateTime.now(), "Pending", null, restaurant, null);
+
+        Mockito.when(orderPersistencePort.findOrderById(orderId)).thenReturn(order);
+        Mockito.when(userServicePort.getEmployeesRestaurant(employeeId)).thenReturn(employeeRestaurantId);
+
+        UnauthorizedEmployeeException exception = assertThrows(UnauthorizedEmployeeException.class, () -> {
+            orderUseCase.assignOrderToEmployee(employeeId, orderId);
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.UNAUTHORIZED_EMPLOYEE_MESSAGE);
+        Mockito.verify(orderPersistencePort, Mockito.times(1)).findOrderById(orderId);
+        Mockito.verify(userServicePort, Mockito.times(1)).getEmployeesRestaurant(employeeId);
+        Mockito.verify(orderPersistencePort, Mockito.never()).updateOrderAssignEmployee(null);
+    }
+
+    @Test
+    @DisplayName("Validation exception when order doesn't have 'Pending' status")
+    void assignOrderToEmployeeShouldThrowValidationExceptionWhenOrderDoesNotHavePendingStatus() {
+        Long employeeId = 1L;
+        Long orderId = 2L;
+        Restaurant restaurant = new Restaurant(1L, null, null, null, null, null, null);
+        Order order = new Order(orderId, 3L, LocalDateTime.now(), "Preparing", null, restaurant, null);
+
+        Mockito.when(orderPersistencePort.findOrderById(orderId)).thenReturn(order);
+        Mockito.when(userServicePort.getEmployeesRestaurant(employeeId)).thenReturn(restaurant.getId());
+
+        OrderNotPendingException exception = assertThrows(OrderNotPendingException.class, () -> {
+            orderUseCase.assignOrderToEmployee(employeeId, orderId);
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.ORDER_NOT_PENDING_MESSAGE);
+        Mockito.verify(orderPersistencePort, Mockito.times(1)).findOrderById(orderId);
+        Mockito.verify(userServicePort, Mockito.times(1)).getEmployeesRestaurant(employeeId);
+        Mockito.verify(orderPersistencePort, Mockito.never()).updateOrderAssignEmployee(null);
+    }
 }
