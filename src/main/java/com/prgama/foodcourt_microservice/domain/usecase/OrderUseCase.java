@@ -71,11 +71,11 @@ public class OrderUseCase implements IOrderServicePort {
     public void finishOrder(Long employeeId, Long orderId) {
         Order order = orderPersistencePort.findOrderById(orderId);
         validateOrderExistence(order);
-        String clientPhoneNumber = userServicePort.getClientsPhoneNumber(order.getClientId());
         validateIfEmployeeWorksInOrder(employeeId, order.getEmployeeId());
         validateIfOrderInPreparingStatus(order.getStatus());
         order.setStatus(OrderStatusConstants.READY_STATUS);
         order.setSecurityCode(generateSecurityCode());
+        String clientPhoneNumber = userServicePort.getClientsPhoneNumber(order.getClientId());
         messageServicePort.sendMessage(clientPhoneNumber, MessagingConstants.SMS + order.getSecurityCode());
         orderPersistencePort.updateOrderStatus(order);
     }
