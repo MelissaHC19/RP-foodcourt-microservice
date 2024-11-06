@@ -47,4 +47,9 @@ public class OrderHandler implements IOrderHandler {
     public void deliverOrder(Long employeeId, Long orderId, DeliverOrderRequest deliverOrderRequest) {
         orderServicePort.deliverOrder(employeeId, orderId, deliverOrderRequest.getSecurityCode());
     }
+
+    @Override
+    public void cancelOrder(Long clientId, Long orderId) {
+        orderServicePort.cancelOrder(clientId, orderId);
+    }
 }

@@ -20,6 +20,7 @@ public class ControllerConstants {
     public static final String ORDER_ASSIGNED_TO_EMPLOYEE_MESSAGE = "Order assigned to employee successfully.";
     public static final String ORDER_READY_MESSAGE = "Order marked as ready successfully.";
     public static final String ORDER_DELIVERED_MESSAGE = "Order delivered successfully.";
+    public static final String ORDER_CANCELED_MESSAGE = "Order canceled successfully.";
 
     public static final String ROLE_ADMIN = "Admin";
     public static final String ROLE_OWNER = "Owner";

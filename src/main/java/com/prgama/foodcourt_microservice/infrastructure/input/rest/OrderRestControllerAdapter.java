@@ -176,4 +176,32 @@ public class OrderRestControllerAdapter {
         orderHandler.deliverOrder(employeeId, orderId, request);
         return ResponseEntity.status(HttpStatus.OK).body(new ControllerResponse(ControllerConstants.ORDER_DELIVERED_MESSAGE, HttpStatus.OK.toString(), LocalDateTime.now()));
     }
+
+    @Operation(summary = DocumentationConstants.CANCEL_ORDER_SUMMARY,
+            tags = {DocumentationConstants.ORDER_TAG},
+            description = DocumentationConstants.CANCEL_ORDER_DESCRIPTION
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = DocumentationConstants.OK_STATUS_CODE,
+                    description = DocumentationConstants.OK_RESPONSE_CODE_DESCRIPTION_CANCELED,
+                    content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.NOT_FOUND_STATUS_CODE,
+                    description = DocumentationConstants.NOT_FOUND_RESPONSE_CODE_DESCRIPTION_ORDER_ASSIGN,
+                    content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.FORBIDDEN_STATUS_CODE,
+                    description = DocumentationConstants.FORBIDDEN_RESPONSE_CODE_DESCRIPTION,
+                    content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.UNAUTHORIZED_STATUS_CODE,
+                    description = DocumentationConstants.UNAUTHORIZED_RESPONSE_CODE_DESCRIPTION,
+                    content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.CONFLICT_STATUS_CODE,
+                    description = DocumentationConstants.CONFLICT_RESPONSE_CODE_DESCRIPTION_CANCELED,
+                    content = @Content),
+    })
+    @PatchMapping("/{orderId}/cancel")
+    public ResponseEntity<ControllerResponse> cancelOrder(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable Long orderId) {
+        Long clientId = authenticationHandler.authenticationForDish(token, ControllerConstants.ROLE_CLIENT);
+        orderHandler.cancelOrder(clientId, orderId);
+        return ResponseEntity.status(HttpStatus.OK).body(new ControllerResponse(ControllerConstants.ORDER_CANCELED_MESSAGE, HttpStatus.OK.toString(), LocalDateTime.now()));
+    }
 }
