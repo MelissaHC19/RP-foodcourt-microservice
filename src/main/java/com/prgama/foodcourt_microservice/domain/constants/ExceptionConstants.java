@@ -27,4 +27,6 @@ public class ExceptionConstants {
     public static final String ORDER_NOT_PENDING_MESSAGE = "Can't assign to order, since it doesn't have 'Pending' status.";
     public static final String UNAUTHORIZED_EMPLOYEE_ORDER_MESSAGE = "Employee can't change order status from an order he's not assigned to.";
     public static final String ORDER_NOT_PREPARING_MESSAGE = "Can't mark order as ready if it wasn't in preparing status.";
+    public static final String ORDER_NOT_READY_MESSAGE = "Can't deliver order if it isn't ready.";
+    public static final String INVALID_SECURITY_CODE_MESSAGE = "The security code provided is incorrect. Can't deliver order.";
 }

@@ -8,4 +8,5 @@ public interface IOrderServicePort {
     Pagination<Order> listOrdersByRestaurantAndStatus(Long employeeId, String orderStatus, Integer pageNumber, Integer pageSize, String sortDirection);
     void assignOrderToEmployee(Long employeeId, Long orderId);
     void finishOrder(Long employeeId, Long orderId);
+    void deliverOrder(Long employeeId, Long orderId, Integer securityCode);
 }

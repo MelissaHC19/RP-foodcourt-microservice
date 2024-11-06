@@ -33,7 +33,10 @@ public class DocumentationConstants {
     public static final String ASSIGN_ORDER_TO_EMPLOYEE_DESCRIPTION = "This endpoint allows an employee to get an order assigned, only when it has a 'Pending' status.";
 
     public static final String FINISH_ORDER_SUMMARY = "Mark order as ready and send security code to client";
-    public static final String FINISH_ORDER_DESCRIPTION = "This endpoint allows an employee to mark an order that's been preparing as ready, which will send an SMS to the client with a security code to claim their order.";
+    public static final String FINISH_ORDER_DESCRIPTION = "This endpoint allows an employee mark an order that's been preparing as ready, which will send an SMS to the client with a security code to claim their order.";
+
+    public static final String DELIVER_ORDER_SUMMARY = "Mark order as delivered";
+    public static final String DELIVER_ORDER_DESCRIPTION = "This endpoint allows an employee mark an order that's ready as delivered when client provide valid security code.";
 
     public static final String RESTAURANT_TAG = "Restaurant";
     public static final String DISH_TAG = "Dish";
@@ -81,6 +84,10 @@ public class DocumentationConstants {
 
     public static final String OK_RESPONSE_CODE_DESCRIPTION_READY = "Order marked as ready and SMS sent successfully.";
     public static final String CONFLICT_RESPONSE_CODE_DESCRIPTION_READY = "Order doesn't have Preparing status, and can't be marked as ready.";
+
+    public static final String OK_RESPONSE_CODE_DESCRIPTION_DELIVERED = "Order marked as delivered successfully.";
+    public static final String CONFLICT_RESPONSE_CODE_DESCRIPTION_DELIVERED = "Order doesn't have Ready status, and can't be marked as delivered.";
+    public static final String BAD_REQUEST_RESPONSE_CODE_DESCRIPTION_DELIVERED = "Invalid security code to claim order.";
 
     public static final String PAGE_NUMBER_PARAMETER = "Page number to retrieve (starting from 0)";
     public static final String PAGE_SIZE_PARAMETER_RESTAURANTS = "Number of restaurants per page";
