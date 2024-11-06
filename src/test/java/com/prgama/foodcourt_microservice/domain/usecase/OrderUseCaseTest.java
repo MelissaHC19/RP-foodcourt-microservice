@@ -363,4 +363,96 @@ class OrderUseCaseTest {
         Mockito.verify(messageServicePort, Mockito.never()).sendMessage(null, null);
         Mockito.verify(orderPersistencePort, Mockito.never()).updateOrderStatus(null);
     }
+
+    @Test
+    @DisplayName("Order marked as delivered successfully")
+    void deliverOrder() {
+        Long employeeId = 1L;
+        Long orderId = 2L;
+        Integer securityCode = 5678;
+        Restaurant restaurant = new Restaurant(1L, null, null, null, null, null, null);
+        Order order = new Order(orderId, 3L, LocalDateTime.now(), "Ready", 1L, restaurant, null, 5678);
+
+        Mockito.when(orderPersistencePort.findOrderById(orderId)).thenReturn(order);
+
+        orderUseCase.deliverOrder(employeeId, orderId, securityCode);
+
+        Mockito.verify(orderPersistencePort, Mockito.times(1)).findOrderById(orderId);
+        Mockito.verify(orderPersistencePort, Mockito.times(1)).updateOrderStatus(order);
+        assertEquals(order.getSecurityCode(), securityCode);
+        assertEquals("Delivered", order.getStatus());
+    }
+
+    @Test
+    @DisplayName("Validation exception when order not found or doesn't exist")
+    void deliverOrderShouldThrowValidationExceptionWhenOrderNotFound(){
+        Long employeeId = 1L;
+        Long orderId = 2L;
+        Integer securityCode = 5678;
+        Mockito.when(orderPersistencePort.findOrderById(orderId)).thenReturn(null);
+
+        OrderNotFoundException exception = assertThrows(OrderNotFoundException.class, () -> {
+            orderUseCase.deliverOrder(employeeId, orderId, securityCode);
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.ORDER_NOT_FOUND_MESSAGE);
+        Mockito.verify(orderPersistencePort, Mockito.times(1)).findOrderById(orderId);
+        Mockito.verify(orderPersistencePort, Mockito.never()).updateOrderStatus(null);
+    }
+
+    @Test
+    @DisplayName("Validation exception when employee doesn't work in that order")
+    void deliverOrderShouldThrowValidationExceptionWhenEmployeeNotAssignToOrder(){
+        Long employeeId = 1L;
+        Long orderId = 2L;
+        Integer securityCode = 5678;
+        Restaurant restaurant = new Restaurant(1L, null, null, null, null, null, null);
+        Order order = new Order(orderId, 3L, LocalDateTime.now(), "Ready", 3L, restaurant, null, 5678);
+
+        Mockito.when(orderPersistencePort.findOrderById(orderId)).thenReturn(order);
+
+        UnauthorizedEmployeeException exception = assertThrows(UnauthorizedEmployeeException.class, () -> {
+            orderUseCase.deliverOrder(employeeId, orderId, securityCode);
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.UNAUTHORIZED_EMPLOYEE_ORDER_MESSAGE);
+        Mockito.verify(orderPersistencePort, Mockito.times(1)).findOrderById(orderId);
+        Mockito.verify(orderPersistencePort, Mockito.never()).updateOrderStatus(null);
+    }
+
+    @Test
+    @DisplayName("Validation exception when order doesn't have 'Ready' status")
+    void deliverOrderShouldThrowValidationExceptionWhenOrderDoesNotHaveReadyStatus() {
+        Long employeeId = 1L;
+        Long orderId = 2L;
+        Integer securityCode = 5678;
+        Restaurant restaurant = new Restaurant(1L, null, null, null, null, null, null);
+        Order order = new Order(orderId, 3L, LocalDateTime.now(), "Preparing", 1L, restaurant, null, 5678);
+
+        Mockito.when(orderPersistencePort.findOrderById(orderId)).thenReturn(order);
+
+        OrderNotReadyException exception = assertThrows(OrderNotReadyException.class, () -> {
+            orderUseCase.deliverOrder(employeeId, orderId, securityCode);
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.ORDER_NOT_READY_MESSAGE);
+        Mockito.verify(orderPersistencePort, Mockito.times(1)).findOrderById(orderId);
+        Mockito.verify(orderPersistencePort, Mockito.never()).updateOrderStatus(null);
+    }
+
+    @Test
+    @DisplayName("Validation exception when security code provided is incorrect")
+    void deliverOrderShouldThrowValidationExceptionWhenInvalidSecurityCode() {
+        Long employeeId = 1L;
+        Long orderId = 2L;
+        Integer securityCode = 1234;
+        Restaurant restaurant = new Restaurant(1L, null, null, null, null, null, null);
+        Order order = new Order(orderId, 3L, LocalDateTime.now(), "Ready", 1L, restaurant, null, 5678);
+
+        Mockito.when(orderPersistencePort.findOrderById(orderId)).thenReturn(order);
+
+        InvalidSecurityCodeException exception = assertThrows(InvalidSecurityCodeException.class, () -> {
+            orderUseCase.deliverOrder(employeeId, orderId, securityCode);
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.INVALID_SECURITY_CODE_MESSAGE);
+        Mockito.verify(orderPersistencePort, Mockito.times(1)).findOrderById(orderId);
+        Mockito.verify(orderPersistencePort, Mockito.never()).updateOrderStatus(null);
+    }
 }
