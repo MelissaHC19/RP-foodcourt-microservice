@@ -455,4 +455,72 @@ class OrderUseCaseTest {
         Mockito.verify(orderPersistencePort, Mockito.times(1)).findOrderById(orderId);
         Mockito.verify(orderPersistencePort, Mockito.never()).updateOrderStatus(null);
     }
+
+    @Test
+    @DisplayName("Cancel order successfully")
+    void cancelOrder() {
+        Long clientId = 1L;
+        Long orderId = 2L;
+        Restaurant restaurant = new Restaurant(1L, null, null, null, null, null, null);
+        Order order = new Order(orderId, 1L, LocalDateTime.now(), "Pending", 1L, restaurant, null, null);
+
+        Mockito.when(orderPersistencePort.findOrderById(orderId)).thenReturn(order);
+
+        orderUseCase.cancelOrder(clientId, orderId);
+
+        Mockito.verify(orderPersistencePort, Mockito.times(1)).findOrderById(orderId);
+        Mockito.verify(orderPersistencePort, Mockito.times(1)).updateOrderStatus(order);
+        assertEquals("Canceled", order.getStatus());
+    }
+
+    @Test
+    @DisplayName("Validation exception when order not found or doesn't exist")
+    void cancelOrderShouldThrowValidationExceptionWhenOrderNotFound(){
+        Long clientId = 1L;
+        Long orderId = 2L;
+        Mockito.when(orderPersistencePort.findOrderById(orderId)).thenReturn(null);
+
+        OrderNotFoundException exception = assertThrows(OrderNotFoundException.class, () -> {
+            orderUseCase.cancelOrder(clientId, orderId);
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.ORDER_NOT_FOUND_MESSAGE);
+        Mockito.verify(orderPersistencePort, Mockito.times(1)).findOrderById(orderId);
+        Mockito.verify(orderPersistencePort, Mockito.never()).updateOrderStatus(null);
+    }
+
+    @Test
+    @DisplayName("Validation exception when client didn't placed the order he wants to cancel")
+    void cancelOrderShouldThrowValidationExceptionWhenClientDidNotPlaceOrder(){
+        Long clientId = 1L;
+        Long orderId = 2L;
+        Restaurant restaurant = new Restaurant(1L, null, null, null, null, null, null);
+        Order order = new Order(orderId, 3L, LocalDateTime.now(), "Ready", 3L, restaurant, null, null);
+
+        Mockito.when(orderPersistencePort.findOrderById(orderId)).thenReturn(order);
+
+        UnauthorizedClientException exception = assertThrows(UnauthorizedClientException.class, () -> {
+            orderUseCase.cancelOrder(clientId, orderId);
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.UNAUTHORIZED_CLIENT_MESSAGE);
+        Mockito.verify(orderPersistencePort, Mockito.times(1)).findOrderById(orderId);
+        Mockito.verify(orderPersistencePort, Mockito.never()).updateOrderStatus(null);
+    }
+
+    @Test
+    @DisplayName("Validation exception when order doesn't have 'Pending' status")
+    void cancelOrderShouldThrowValidationExceptionWhenOrderDoesNotHavePendingStatus() {
+        Long clientId = 1L;
+        Long orderId = 2L;
+        Restaurant restaurant = new Restaurant(1L, null, null, null, null, null, null);
+        Order order = new Order(orderId, 1L, LocalDateTime.now(), "Preparing", 1L, restaurant, null, null);
+
+        Mockito.when(orderPersistencePort.findOrderById(orderId)).thenReturn(order);
+
+        OrderNotPendingException exception = assertThrows(OrderNotPendingException.class, () -> {
+            orderUseCase.cancelOrder(clientId, orderId);
+        });
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.ORDER_CANT_BE_CANCELED_MESSAGE);
+        Mockito.verify(orderPersistencePort, Mockito.times(1)).findOrderById(orderId);
+        Mockito.verify(orderPersistencePort, Mockito.never()).updateOrderStatus(null);
+    }
 }
