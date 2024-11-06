@@ -38,6 +38,9 @@ public class DocumentationConstants {
     public static final String DELIVER_ORDER_SUMMARY = "Mark order as delivered";
     public static final String DELIVER_ORDER_DESCRIPTION = "This endpoint allows an employee mark an order that's ready as delivered when client provide valid security code.";
 
+    public static final String CANCEL_ORDER_SUMMARY = "Order canceled successfully";
+    public static final String CANCEL_ORDER_DESCRIPTION = "This endpoint allows a client cancel an order only if it's still in Pending status.";
+
     public static final String RESTAURANT_TAG = "Restaurant";
     public static final String DISH_TAG = "Dish";
     public static final String ORDER_TAG = "Order";
@@ -88,6 +91,9 @@ public class DocumentationConstants {
     public static final String OK_RESPONSE_CODE_DESCRIPTION_DELIVERED = "Order marked as delivered successfully.";
     public static final String CONFLICT_RESPONSE_CODE_DESCRIPTION_DELIVERED = "Order doesn't have Ready status, and can't be marked as delivered.";
     public static final String BAD_REQUEST_RESPONSE_CODE_DESCRIPTION_DELIVERED = "Invalid security code to claim order.";
+
+    public static final String OK_RESPONSE_CODE_DESCRIPTION_CANCELED = "Order canceled successfully.";
+    public static final String CONFLICT_RESPONSE_CODE_DESCRIPTION_CANCELED = "Order already being prepared and can't be canceled.";
 
     public static final String PAGE_NUMBER_PARAMETER = "Page number to retrieve (starting from 0)";
     public static final String PAGE_SIZE_PARAMETER_RESTAURANTS = "Number of restaurants per page";
