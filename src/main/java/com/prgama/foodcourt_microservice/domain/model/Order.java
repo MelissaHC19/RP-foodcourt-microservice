@@ -13,8 +13,9 @@ public class Order {
     private Long employeeId;
     private Restaurant restaurant;
     private List<OrderDish> orderDishes;
+    private Integer securityCode;
 
-    public Order(Long id, Long clientId, LocalDateTime date, String status, Long employeeId, Restaurant restaurant, List<OrderDish> orderDishes) {
+    public Order(Long id, Long clientId, LocalDateTime date, String status, Long employeeId, Restaurant restaurant, List<OrderDish> orderDishes, Integer securityCode) {
         this.id = id;
         this.clientId = clientId;
         this.date = date;
@@ -22,6 +23,7 @@ public class Order {
         this.employeeId = employeeId;
         this.restaurant = restaurant;
         this.orderDishes = orderDishes;
+        this.securityCode = securityCode;
     }
 
     public Long getId() {
@@ -78,5 +80,13 @@ public class Order {
 
     public void setOrderDishes(List<OrderDish> orderDishes) {
         this.orderDishes = orderDishes;
+    }
+
+    public Integer getSecurityCode() {
+        return securityCode;
+    }
+
+    public void setSecurityCode(Integer securityCode) {
+        this.securityCode = securityCode;
     }
 }

@@ -1,8 +1,10 @@
 package com.prgama.foodcourt_microservice.domain.usecase;
 
+import com.prgama.foodcourt_microservice.domain.api.IMessageServicePort;
 import com.prgama.foodcourt_microservice.domain.api.IOrderServicePort;
 import com.prgama.foodcourt_microservice.domain.api.IUserServicePort;
 import com.prgama.foodcourt_microservice.domain.constants.ExceptionConstants;
+import com.prgama.foodcourt_microservice.domain.constants.MessagingConstants;
 import com.prgama.foodcourt_microservice.domain.constants.OrderStatusConstants;
 import com.prgama.foodcourt_microservice.domain.constants.PaginationConstants;
 import com.prgama.foodcourt_microservice.domain.exception.*;
@@ -17,18 +19,21 @@ import com.prgama.foodcourt_microservice.domain.spi.IRestaurantPersistencePort;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class OrderUseCase implements IOrderServicePort {
     private final IRestaurantPersistencePort restaurantPersistencePort;
     private final IOrderPersistencePort orderPersistencePort;
     private final IDishPersistencePort dishPersistencePort;
     private final IUserServicePort userServicePort;
+    private final IMessageServicePort messageServicePort;
 
-    public OrderUseCase(IRestaurantPersistencePort restaurantPersistencePort, IOrderPersistencePort orderPersistencePort, IDishPersistencePort dishPersistencePort, IUserServicePort userServicePort) {
+    public OrderUseCase(IRestaurantPersistencePort restaurantPersistencePort, IOrderPersistencePort orderPersistencePort, IDishPersistencePort dishPersistencePort, IUserServicePort userServicePort, IMessageServicePort messageServicePort) {
         this.restaurantPersistencePort = restaurantPersistencePort;
         this.orderPersistencePort = orderPersistencePort;
         this.dishPersistencePort = dishPersistencePort;
         this.userServicePort = userServicePort;
+        this.messageServicePort = messageServicePort;
     }
 
     @Override
@@ -60,6 +65,19 @@ public class OrderUseCase implements IOrderServicePort {
         order.setEmployeeId(employeeId);
         order.setStatus(OrderStatusConstants.PREPARING_STATUS);
         orderPersistencePort.updateOrderAssignEmployee(order);
+    }
+
+    @Override
+    public void finishOrder(Long employeeId, Long orderId) {
+        Order order = orderPersistencePort.findOrderById(orderId);
+        validateOrderExistence(order);
+        String clientPhoneNumber = userServicePort.getClientsPhoneNumber(order.getClientId());
+        validateIfEmployeeWorksInOrder(employeeId, order.getEmployeeId());
+        validateIfOrderInPreparingStatus(order.getStatus());
+        order.setStatus(OrderStatusConstants.READY_STATUS);
+        order.setSecurityCode(generateSecurityCode());
+        messageServicePort.sendMessage(clientPhoneNumber, MessagingConstants.SMS + order.getSecurityCode());
+        orderPersistencePort.updateOrderStatus(order);
     }
 
     private void validateRestaurantExistence(Order order) {
@@ -129,5 +147,22 @@ public class OrderUseCase implements IOrderServicePort {
         if (!Objects.equals(orderStatus, OrderStatusConstants.PENDING_STATUS)) {
             throw new OrderNotPendingException(ExceptionConstants.ORDER_NOT_PENDING_MESSAGE);
         }
+    }
+
+    private void validateIfEmployeeWorksInOrder(Long employeeId, Long orderEmployee) {
+        if (!Objects.equals(employeeId, orderEmployee)) {
+            throw new UnauthorizedEmployeeException(ExceptionConstants.UNAUTHORIZED_EMPLOYEE_ORDER_MESSAGE);
+        }
+    }
+
+    private void validateIfOrderInPreparingStatus(String orderStatus) {
+        if (!Objects.equals(orderStatus, OrderStatusConstants.PREPARING_STATUS)) {
+            throw new OrderNotPreparingException(ExceptionConstants.ORDER_NOT_PREPARING_MESSAGE);
+        }
+    }
+
+    private Integer generateSecurityCode() {
+        Random random = new Random();
+        return 1000 + random.nextInt(9000);
     }
 }

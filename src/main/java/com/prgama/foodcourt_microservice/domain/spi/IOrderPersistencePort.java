@@ -9,4 +9,5 @@ public interface IOrderPersistencePort {
     Pagination<Order> listOrdersByRestaurantAndStatus(Long restaurantId, String orderStatus, Integer pageNumber, Integer pageSize, String sortBy, String sortDirection);
     void updateOrderAssignEmployee(Order order);
     Order findOrderById(Long id);
+    void updateOrderStatus(Order order);
 }
