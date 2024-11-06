@@ -1,6 +1,7 @@
 package com.prgama.foodcourt_microservice.application.handler;
 
 import com.prgama.foodcourt_microservice.application.dto.request.CreateOrderRequest;
+import com.prgama.foodcourt_microservice.application.dto.request.DeliverOrderRequest;
 import com.prgama.foodcourt_microservice.application.dto.response.ListOrdersResponse;
 import com.prgama.foodcourt_microservice.application.dto.response.PaginationResponse;
 import com.prgama.foodcourt_microservice.application.mapper.ICreateOrderRequestMapper;
@@ -40,5 +41,10 @@ public class OrderHandler implements IOrderHandler {
     @Override
     public void finishOrder(Long employeeId, Long orderId) {
         orderServicePort.finishOrder(employeeId, orderId);
+    }
+
+    @Override
+    public void deliverOrder(Long employeeId, Long orderId, DeliverOrderRequest deliverOrderRequest) {
+        orderServicePort.deliverOrder(employeeId, orderId, deliverOrderRequest.getSecurityCode());
     }
 }

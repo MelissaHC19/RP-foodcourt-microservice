@@ -80,6 +80,17 @@ public class OrderUseCase implements IOrderServicePort {
         orderPersistencePort.updateOrderStatus(order);
     }
 
+    @Override
+    public void deliverOrder(Long employeeId, Long orderId, Integer securityCode) {
+        Order order = orderPersistencePort.findOrderById(orderId);
+        validateOrderExistence(order);
+        validateIfEmployeeWorksInOrder(employeeId, order.getEmployeeId());
+        validateIfOrderInReadyStatus(order.getStatus());
+        validateSecurityCode(securityCode, order.getSecurityCode());
+        order.setStatus(OrderStatusConstants.DELIVERED_STATUS);
+        orderPersistencePort.updateOrderStatus(order);
+    }
+
     private void validateRestaurantExistence(Order order) {
         if (!restaurantPersistencePort.alreadyExistsById(order.getRestaurant().getId())) {
             throw new RestaurantNotFoundException(ExceptionConstants.RESTAURANT_NOT_FOUND_MESSAGE);
@@ -164,5 +175,17 @@ public class OrderUseCase implements IOrderServicePort {
     private Integer generateSecurityCode() {
         Random random = new Random();
         return 1000 + random.nextInt(9000);
+    }
+
+    private void validateIfOrderInReadyStatus(String orderStatus) {
+        if (!Objects.equals(orderStatus, OrderStatusConstants.READY_STATUS)) {
+            throw new OrderNotReadyException(ExceptionConstants.ORDER_NOT_READY_MESSAGE);
+        }
+    }
+
+    private void validateSecurityCode(Integer providedCode, Integer actualCode) {
+        if (!Objects.equals(providedCode, actualCode)) {
+            throw new InvalidSecurityCodeException(ExceptionConstants.INVALID_SECURITY_CODE_MESSAGE);
+        }
     }
 }

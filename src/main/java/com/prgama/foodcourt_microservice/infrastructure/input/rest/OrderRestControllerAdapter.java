@@ -1,6 +1,7 @@
 package com.prgama.foodcourt_microservice.infrastructure.input.rest;
 
 import com.prgama.foodcourt_microservice.application.dto.request.CreateOrderRequest;
+import com.prgama.foodcourt_microservice.application.dto.request.DeliverOrderRequest;
 import com.prgama.foodcourt_microservice.application.dto.response.ControllerResponse;
 import com.prgama.foodcourt_microservice.application.dto.response.ListOrdersResponse;
 import com.prgama.foodcourt_microservice.application.dto.response.PaginationResponse;
@@ -143,5 +144,12 @@ public class OrderRestControllerAdapter {
         Long employeeId = authenticationHandler.authenticationForDish(token, ControllerConstants.ROLE_EMPLOYEE);
         orderHandler.finishOrder(employeeId, orderId);
         return ResponseEntity.status(HttpStatus.OK).body(new ControllerResponse(ControllerConstants.ORDER_READY_MESSAGE, HttpStatus.OK.toString(), LocalDateTime.now()));
+    }
+
+    @PatchMapping("/{orderId}/deliver")
+    public ResponseEntity<ControllerResponse> deliverOrder(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable Long orderId, @Valid @RequestBody DeliverOrderRequest request) {
+        Long employeeId = authenticationHandler.authenticationForDish(token, ControllerConstants.ROLE_EMPLOYEE);
+        orderHandler.deliverOrder(employeeId, orderId, request);
+        return ResponseEntity.status(HttpStatus.OK).body(new ControllerResponse(ControllerConstants.ORDER_DELIVERED_MESSAGE, HttpStatus.OK.toString(), LocalDateTime.now()));
     }
 }

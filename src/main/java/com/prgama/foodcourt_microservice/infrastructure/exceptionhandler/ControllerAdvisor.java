@@ -137,6 +137,18 @@ public class ControllerAdvisor {
         return ResponseEntity.status(409).body(response);
     }
 
+    @ExceptionHandler(OrderNotReadyException.class)
+    public ResponseEntity<ExceptionResponse> handleOrderNotReadyException(OrderNotReadyException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.CONFLICT.toString(), LocalDateTime.now());
+        return ResponseEntity.status(409).body(response);
+    }
+
+    @ExceptionHandler(InvalidSecurityCodeException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidSecurityCodeException(InvalidSecurityCodeException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now());
+        return ResponseEntity.badRequest().body(response);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptionsDTO(MethodArgumentNotValidException exception) {
         ArrayList<String> errors = new ArrayList<>();
