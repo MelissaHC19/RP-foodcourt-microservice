@@ -72,4 +72,9 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
     public Order findOrderById(Long id) {
         return orderEntityMapper.orderEntityToOrder(orderRepository.findById(id).orElse(null));
     }
+
+    @Override
+    public void updateOrderStatus(Order order) {
+        orderRepository.save(orderEntityMapper.orderToEntity(order));
+    }
 }

@@ -25,4 +25,6 @@ public class ExceptionConstants {
     public static final String ORDER_NOT_FOUND_MESSAGE = "Order not found or doesn't exists.";
     public static final String UNAUTHORIZED_EMPLOYEE_MESSAGE = "Employee can't assign an order from a restaurant he doesn't work for.";
     public static final String ORDER_NOT_PENDING_MESSAGE = "Can't assign to order, since it doesn't have 'Pending' status.";
+    public static final String UNAUTHORIZED_EMPLOYEE_ORDER_MESSAGE = "Employee can't change order status from an order he's not assigned to.";
+    public static final String ORDER_NOT_PREPARING_MESSAGE = "Can't mark order as ready if it wasn't in preparing status.";
 }

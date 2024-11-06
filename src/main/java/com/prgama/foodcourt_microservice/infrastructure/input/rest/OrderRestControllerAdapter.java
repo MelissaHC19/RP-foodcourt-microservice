@@ -116,4 +116,32 @@ public class OrderRestControllerAdapter {
         orderHandler.assignOrderToEmployee(employeeId, orderId);
         return ResponseEntity.status(HttpStatus.OK).body(new ControllerResponse(ControllerConstants.ORDER_ASSIGNED_TO_EMPLOYEE_MESSAGE, HttpStatus.OK.toString(), LocalDateTime.now()));
     }
+
+    @Operation(summary = DocumentationConstants.FINISH_ORDER_SUMMARY,
+            tags = {DocumentationConstants.ORDER_TAG},
+            description = DocumentationConstants.FINISH_ORDER_DESCRIPTION
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = DocumentationConstants.OK_STATUS_CODE,
+                    description = DocumentationConstants.OK_RESPONSE_CODE_DESCRIPTION_READY,
+                    content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.NOT_FOUND_STATUS_CODE,
+                    description = DocumentationConstants.NOT_FOUND_RESPONSE_CODE_DESCRIPTION_ORDER_ASSIGN,
+                    content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.FORBIDDEN_STATUS_CODE,
+                    description = DocumentationConstants.FORBIDDEN_RESPONSE_CODE_DESCRIPTION,
+                    content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.UNAUTHORIZED_STATUS_CODE,
+                    description = DocumentationConstants.UNAUTHORIZED_RESPONSE_CODE_DESCRIPTION,
+                    content = @Content),
+            @ApiResponse(responseCode = DocumentationConstants.CONFLICT_STATUS_CODE,
+                    description = DocumentationConstants.CONFLICT_RESPONSE_CODE_DESCRIPTION_READY,
+                    content = @Content),
+    })
+    @PatchMapping("/{orderId}/finish")
+    public ResponseEntity<ControllerResponse> finishOrder(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable Long orderId) {
+        Long employeeId = authenticationHandler.authenticationForDish(token, ControllerConstants.ROLE_EMPLOYEE);
+        orderHandler.finishOrder(employeeId, orderId);
+        return ResponseEntity.status(HttpStatus.OK).body(new ControllerResponse(ControllerConstants.ORDER_READY_MESSAGE, HttpStatus.OK.toString(), LocalDateTime.now()));
+    }
 }

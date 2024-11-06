@@ -20,6 +20,7 @@ public interface ICreateOrderRequestMapper {
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "employeeId", ignore = true)
     @Mapping(target = "clientId", ignore = true)
+    @Mapping(target = "securityCode", ignore = true)
     @Mapping(source = "restaurantId", target = "restaurant", qualifiedByName = "mapRestaurantIdToRestaurant")
     @Mapping(source = "listDishes", target = "orderDishes", qualifiedByName = "mapListDishesToOrderDishes")
     Order requestToOrder(CreateOrderRequest createOrderRequest);

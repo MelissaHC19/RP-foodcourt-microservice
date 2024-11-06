@@ -37,4 +37,6 @@ public class OrderEntity {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderDishEntity> orderDishes;
+
+    private Integer securityCode;
 }

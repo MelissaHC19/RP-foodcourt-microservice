@@ -1,5 +1,6 @@
 package com.prgama.foodcourt_microservice.infrastructure.feign;
 
+import com.prgama.foodcourt_microservice.application.dto.request.GetClientsPhoneNumberRequest;
 import com.prgama.foodcourt_microservice.application.dto.request.GetEmployeesRestaurantRequest;
 import com.prgama.foodcourt_microservice.application.dto.request.GetUserRequest;
 import com.prgama.foodcourt_microservice.domain.api.IUserServicePort;
@@ -21,5 +22,11 @@ public class UserServicePortImpl implements IUserServicePort {
     public Long getEmployeesRestaurant(Long employeeId) {
         GetEmployeesRestaurantRequest employeesRestaurantRequest = userFeign.getEmployeesRestaurantId(employeeId);
         return employeesRestaurantRequest.getRestaurantId();
+    }
+
+    @Override
+    public String getClientsPhoneNumber(Long clientId) {
+        GetClientsPhoneNumberRequest clientsPhoneNumberRequest = userFeign.getClientsPhoneNumber(clientId);
+        return clientsPhoneNumberRequest.getPhoneNumber();
     }
 }

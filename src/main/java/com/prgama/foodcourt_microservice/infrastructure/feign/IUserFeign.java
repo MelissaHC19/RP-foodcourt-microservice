@@ -1,5 +1,6 @@
 package com.prgama.foodcourt_microservice.infrastructure.feign;
 
+import com.prgama.foodcourt_microservice.application.dto.request.GetClientsPhoneNumberRequest;
 import com.prgama.foodcourt_microservice.application.dto.request.GetEmployeesRestaurantRequest;
 import com.prgama.foodcourt_microservice.application.dto.request.GetUserRequest;
 import com.prgama.foodcourt_microservice.infrastructure.constants.FeignConstants;
@@ -14,4 +15,7 @@ public interface IUserFeign {
 
     @GetMapping("/employee/{employeeId}")
     GetEmployeesRestaurantRequest getEmployeesRestaurantId(@PathVariable Long employeeId);
+
+    @GetMapping("/client/{clientId}")
+    GetClientsPhoneNumberRequest getClientsPhoneNumber(@PathVariable Long clientId);
 }

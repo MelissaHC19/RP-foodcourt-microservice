@@ -131,6 +131,12 @@ public class ControllerAdvisor {
         return ResponseEntity.status(403).body(response);
     }
 
+    @ExceptionHandler(OrderNotPreparingException.class)
+    public ResponseEntity<ExceptionResponse> handleOrderNotPreparingException(OrderNotPreparingException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage(), HttpStatus.CONFLICT.toString(), LocalDateTime.now());
+        return ResponseEntity.status(409).body(response);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptionsDTO(MethodArgumentNotValidException exception) {
         ArrayList<String> errors = new ArrayList<>();
