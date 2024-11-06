@@ -9,4 +9,5 @@ public interface IOrderServicePort {
     void assignOrderToEmployee(Long employeeId, Long orderId);
     void finishOrder(Long employeeId, Long orderId);
     void deliverOrder(Long employeeId, Long orderId, Integer securityCode);
+    void cancelOrder(Long clientId, Long orderId);
 }

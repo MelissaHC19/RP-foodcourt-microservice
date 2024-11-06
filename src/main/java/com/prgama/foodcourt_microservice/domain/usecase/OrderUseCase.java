@@ -91,6 +91,16 @@ public class OrderUseCase implements IOrderServicePort {
         orderPersistencePort.updateOrderStatus(order);
     }
 
+    @Override
+    public void cancelOrder(Long clientId, Long orderId) {
+        Order order = orderPersistencePort.findOrderById(orderId);
+        validateOrderExistence(order);
+        validateIfClientPlacedOrder(clientId, order.getClientId());
+        validateIfOrderCanBeCanceled(order.getStatus());
+        order.setStatus(OrderStatusConstants.CANCELED_STATUS);
+        orderPersistencePort.updateOrderStatus(order);
+    }
+
     private void validateRestaurantExistence(Order order) {
         if (!restaurantPersistencePort.alreadyExistsById(order.getRestaurant().getId())) {
             throw new RestaurantNotFoundException(ExceptionConstants.RESTAURANT_NOT_FOUND_MESSAGE);
@@ -186,6 +196,18 @@ public class OrderUseCase implements IOrderServicePort {
     private void validateSecurityCode(Integer providedCode, Integer actualCode) {
         if (!Objects.equals(providedCode, actualCode)) {
             throw new InvalidSecurityCodeException(ExceptionConstants.INVALID_SECURITY_CODE_MESSAGE);
+        }
+    }
+
+    private void validateIfClientPlacedOrder(Long clientId, Long orderClientId) {
+        if (!Objects.equals(clientId, orderClientId)) {
+            throw new UnauthorizedClientException(ExceptionConstants.UNAUTHORIZED_CLIENT_MESSAGE);
+        }
+    }
+
+    private void validateIfOrderCanBeCanceled(String orderStatus) {
+        if (!Objects.equals(orderStatus, OrderStatusConstants.PENDING_STATUS)) {
+            throw new OrderNotPendingException(ExceptionConstants.ORDER_CANT_BE_CANCELED_MESSAGE);
         }
     }
 }

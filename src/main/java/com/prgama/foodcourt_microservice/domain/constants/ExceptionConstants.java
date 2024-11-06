@@ -29,4 +29,6 @@ public class ExceptionConstants {
     public static final String ORDER_NOT_PREPARING_MESSAGE = "Can't mark order as ready if it wasn't in preparing status.";
     public static final String ORDER_NOT_READY_MESSAGE = "Can't deliver order if it isn't ready.";
     public static final String INVALID_SECURITY_CODE_MESSAGE = "The security code provided is incorrect. Can't deliver order.";
+    public static final String UNAUTHORIZED_CLIENT_MESSAGE = "Can't cancel an order you didn't placed.";
+    public static final String ORDER_CANT_BE_CANCELED_MESSAGE = "We're sorry for the inconvenience, but your order is already being prepared and can't be canceled.";
 }

@@ -176,4 +176,11 @@ public class OrderRestControllerAdapter {
         orderHandler.deliverOrder(employeeId, orderId, request);
         return ResponseEntity.status(HttpStatus.OK).body(new ControllerResponse(ControllerConstants.ORDER_DELIVERED_MESSAGE, HttpStatus.OK.toString(), LocalDateTime.now()));
     }
+
+    @PatchMapping("/{orderId}/cancel")
+    public ResponseEntity<ControllerResponse> cancelOrder(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable Long orderId) {
+        Long clientId = authenticationHandler.authenticationForDish(token, ControllerConstants.ROLE_CLIENT);
+        orderHandler.cancelOrder(clientId, orderId);
+        return ResponseEntity.status(HttpStatus.OK).body(new ControllerResponse(ControllerConstants.ORDER_CANCELED_MESSAGE, HttpStatus.OK.toString(), LocalDateTime.now()));
+    }
 }
