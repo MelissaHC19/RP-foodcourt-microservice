@@ -2,6 +2,7 @@ package com.prgama.foodcourt_microservice.domain.usecase;
 
 import com.prgama.foodcourt_microservice.domain.api.IMessageServicePort;
 import com.prgama.foodcourt_microservice.domain.api.IOrderServicePort;
+import com.prgama.foodcourt_microservice.domain.api.ITraceabilityServicePort;
 import com.prgama.foodcourt_microservice.domain.api.IUserServicePort;
 import com.prgama.foodcourt_microservice.domain.constants.ExceptionConstants;
 import com.prgama.foodcourt_microservice.domain.constants.MessagingConstants;
@@ -27,13 +28,15 @@ public class OrderUseCase implements IOrderServicePort {
     private final IDishPersistencePort dishPersistencePort;
     private final IUserServicePort userServicePort;
     private final IMessageServicePort messageServicePort;
+    private final ITraceabilityServicePort traceabilityServicePort;
 
-    public OrderUseCase(IRestaurantPersistencePort restaurantPersistencePort, IOrderPersistencePort orderPersistencePort, IDishPersistencePort dishPersistencePort, IUserServicePort userServicePort, IMessageServicePort messageServicePort) {
+    public OrderUseCase(IRestaurantPersistencePort restaurantPersistencePort, IOrderPersistencePort orderPersistencePort, IDishPersistencePort dishPersistencePort, IUserServicePort userServicePort, IMessageServicePort messageServicePort, ITraceabilityServicePort traceabilityServicePort) {
         this.restaurantPersistencePort = restaurantPersistencePort;
         this.orderPersistencePort = orderPersistencePort;
         this.dishPersistencePort = dishPersistencePort;
         this.userServicePort = userServicePort;
         this.messageServicePort = messageServicePort;
+        this.traceabilityServicePort = traceabilityServicePort;
     }
 
     @Override
@@ -44,7 +47,11 @@ public class OrderUseCase implements IOrderServicePort {
         order.setDate(LocalDateTime.now());
         order.setStatus(OrderStatusConstants.PENDING_STATUS);
         order.setClientId(clientId);
-        orderPersistencePort.createOrder(order);
+
+        Order dbOrder = orderPersistencePort.createOrder(order);
+        String clientEmail = userServicePort.getUsersEmail(clientId);
+        LocalDateTime initialTime = LocalDateTime.now();
+        traceabilityServicePort.createTraceability(dbOrder.getId(), order.getClientId(), clientEmail, initialTime, order.getStatus());
     }
 
     @Override
@@ -62,9 +69,15 @@ public class OrderUseCase implements IOrderServicePort {
         Long employeesRestaurantId = userServicePort.getEmployeesRestaurant(employeeId);
         validateIfEmployeeWorksForOrderRestaurant(employeesRestaurantId, order.getRestaurant().getId());
         validateIfOrderInPendingStatus(order.getStatus());
+        String lastStatus = order.getStatus();
         order.setEmployeeId(employeeId);
         order.setStatus(OrderStatusConstants.PREPARING_STATUS);
         orderPersistencePort.updateOrderAssignEmployee(order);
+
+        LocalDateTime finalTime = LocalDateTime.now();
+        String newStatus = order.getStatus();
+        String employeeEmail = userServicePort.getUsersEmail(employeeId);
+        traceabilityServicePort.updateTraceability(finalTime, lastStatus, newStatus, employeeId, employeeEmail, order.getId());
     }
 
     @Override
@@ -73,11 +86,17 @@ public class OrderUseCase implements IOrderServicePort {
         validateOrderExistence(order);
         validateIfEmployeeWorksInOrder(employeeId, order.getEmployeeId());
         validateIfOrderInPreparingStatus(order.getStatus());
+        String lastStatus = order.getStatus();
         order.setStatus(OrderStatusConstants.READY_STATUS);
         order.setSecurityCode(generateSecurityCode());
         String clientPhoneNumber = userServicePort.getClientsPhoneNumber(order.getClientId());
         messageServicePort.sendMessage(clientPhoneNumber, MessagingConstants.SMS + order.getSecurityCode());
         orderPersistencePort.updateOrderStatus(order);
+
+        LocalDateTime finalTime = LocalDateTime.now();
+        String newStatus = order.getStatus();
+        String employeeEmail = userServicePort.getUsersEmail(employeeId);
+        traceabilityServicePort.updateTraceability(finalTime, lastStatus, newStatus, employeeId, employeeEmail, order.getId());
     }
 
     @Override
@@ -87,8 +106,14 @@ public class OrderUseCase implements IOrderServicePort {
         validateIfEmployeeWorksInOrder(employeeId, order.getEmployeeId());
         validateIfOrderInReadyStatus(order.getStatus());
         validateSecurityCode(securityCode, order.getSecurityCode());
+        String lastStatus = order.getStatus();
         order.setStatus(OrderStatusConstants.DELIVERED_STATUS);
         orderPersistencePort.updateOrderStatus(order);
+
+        LocalDateTime finalTime = LocalDateTime.now();
+        String newStatus = order.getStatus();
+        String employeeEmail = userServicePort.getUsersEmail(employeeId);
+        traceabilityServicePort.updateTraceability(finalTime, lastStatus, newStatus, employeeId, employeeEmail, order.getId());
     }
 
     @Override
@@ -97,8 +122,13 @@ public class OrderUseCase implements IOrderServicePort {
         validateOrderExistence(order);
         validateIfClientPlacedOrder(clientId, order.getClientId());
         validateIfOrderCanBeCanceled(order.getStatus());
+        String lastStatus = order.getStatus();
         order.setStatus(OrderStatusConstants.CANCELED_STATUS);
         orderPersistencePort.updateOrderStatus(order);
+
+        LocalDateTime finalTime = LocalDateTime.now();
+        String newStatus = order.getStatus();
+        traceabilityServicePort.updateTraceability(finalTime, lastStatus, newStatus, null, null, order.getId());
     }
 
     private void validateRestaurantExistence(Order order) {

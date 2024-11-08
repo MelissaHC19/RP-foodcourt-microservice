@@ -1,6 +1,7 @@
 package com.prgama.foodcourt_microservice.domain.usecase;
 
 import com.prgama.foodcourt_microservice.domain.api.IMessageServicePort;
+import com.prgama.foodcourt_microservice.domain.api.ITraceabilityServicePort;
 import com.prgama.foodcourt_microservice.domain.api.IUserServicePort;
 import com.prgama.foodcourt_microservice.domain.constants.ExceptionConstants;
 import com.prgama.foodcourt_microservice.domain.constants.MessagingConstants;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 class OrderUseCaseTest {
@@ -40,6 +42,9 @@ class OrderUseCaseTest {
     @Mock
     private IMessageServicePort messageServicePort;
 
+    @Mock
+    private ITraceabilityServicePort traceabilityServicePort;
+
     @InjectMocks
     private OrderUseCase orderUseCase;
 
@@ -47,6 +52,7 @@ class OrderUseCaseTest {
     @DisplayName("Creates an order successfully")
     void createOrder() {
         Long clientId = 1L;
+        String clientEmail = "email@email.com";
         Restaurant restaurant = new Restaurant(1L, "Test Restaurant", null, null, null, null, null);
         Dish dish = new Dish(1L, "Dish Name", "Delicious dish", 10000, "dish-image.jpg", restaurant, new Category(1L, "Category", null));
         OrderDish orderDish = new OrderDish(5L, null, dish, 5);
@@ -56,6 +62,8 @@ class OrderUseCaseTest {
         Mockito.when(restaurantPersistencePort.alreadyExistsById(1L)).thenReturn(true);
         Mockito.when(orderPersistencePort.findOrdersByClientId(clientId)).thenReturn(false);
         Mockito.when(dishPersistencePort.findById(1L)).thenReturn(dish);
+        Mockito.when(orderPersistencePort.createOrder(order)).thenReturn(order);
+        Mockito.when(userServicePort.getUsersEmail(order.getClientId())).thenReturn(clientEmail);
 
         orderUseCase.createOrder(order, clientId);
 
@@ -63,6 +71,8 @@ class OrderUseCaseTest {
         Mockito.verify(orderPersistencePort, Mockito.times(1)).findOrdersByClientId(clientId);
         Mockito.verify(dishPersistencePort, Mockito.times(1)).findById(1L);
         Mockito.verify(orderPersistencePort, Mockito.times(1)).createOrder(order);
+        Mockito.verify(userServicePort, Mockito.times(1)).getUsersEmail(order.getClientId());
+        Mockito.verify(traceabilityServicePort, Mockito.times(1)).createTraceability(any(), any(), any(), any(), any());
     }
 
     @Test
@@ -80,7 +90,7 @@ class OrderUseCaseTest {
         });
         assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.RESTAURANT_NOT_FOUND_MESSAGE);
         Mockito.verify(restaurantPersistencePort, Mockito.times(1)).alreadyExistsById(1L);
-        Mockito.verify(orderPersistencePort, Mockito.never()).createOrder(Mockito.any());
+        Mockito.verify(orderPersistencePort, Mockito.never()).createOrder(any());
     }
 
     @Test
@@ -101,7 +111,7 @@ class OrderUseCaseTest {
         assertThat(exception.getMessage()).isEqualTo(ExceptionConstants.DISH_NOT_FROM_RESTAURANT_MESSAGE);
         Mockito.verify(restaurantPersistencePort, Mockito.times(1)).alreadyExistsById(1L);
         Mockito.verify(dishPersistencePort, Mockito.times(1)).findById(1L);
-        Mockito.verify(orderPersistencePort, Mockito.never()).createOrder(Mockito.any());
+        Mockito.verify(orderPersistencePort, Mockito.never()).createOrder(any());
     }
 
     @Test
@@ -123,7 +133,7 @@ class OrderUseCaseTest {
         Mockito.verify(restaurantPersistencePort, Mockito.times(1)).alreadyExistsById(1L);
         Mockito.verify(dishPersistencePort, Mockito.times(1)).findById(1L);
         Mockito.verify(orderPersistencePort, Mockito.times(1)).findOrdersByClientId(clientId);
-        Mockito.verify(orderPersistencePort, Mockito.never()).createOrder(Mockito.any());
+        Mockito.verify(orderPersistencePort, Mockito.never()).createOrder(any());
     }
 
     @Test
@@ -213,11 +223,13 @@ class OrderUseCaseTest {
     void assignOrderToEmployee() {
         Long employeeId = 1L;
         Long orderId = 2L;
+        String employeeEmail = "email@email.com";
         Restaurant restaurant = new Restaurant(1L, null, null, null, null, null, null);
         Order order = new Order(orderId, 3L, LocalDateTime.now(), "Pending", null, restaurant, null, null);
 
         Mockito.when(orderPersistencePort.findOrderById(orderId)).thenReturn(order);
         Mockito.when(userServicePort.getEmployeesRestaurant(employeeId)).thenReturn(restaurant.getId());
+        Mockito.when(userServicePort.getUsersEmail(employeeId)).thenReturn(employeeEmail);
 
         orderUseCase.assignOrderToEmployee(employeeId, orderId);
 
@@ -226,6 +238,8 @@ class OrderUseCaseTest {
         Mockito.verify(orderPersistencePort, Mockito.times(1)).updateOrderAssignEmployee(order);
         assertEquals("Preparing", order.getStatus());
         assertEquals(employeeId, order.getEmployeeId());
+        Mockito.verify(userServicePort, Mockito.times(1)).getUsersEmail(employeeId);
+        Mockito.verify(traceabilityServicePort, Mockito.times(1)).updateTraceability(any(), any(), any(), any(), any(), any());
     }
 
     @Test
@@ -305,6 +319,7 @@ class OrderUseCaseTest {
         assertEquals("Ready", order.getStatus());
         assertNotNull(order.getSecurityCode());
         assertTrue(order.getSecurityCode() >= 1000 && order.getSecurityCode() <= 9999);
+        Mockito.verify(traceabilityServicePort, Mockito.times(1)).updateTraceability(any(), any(), any(), any(), any(), any());
     }
 
     @Test
@@ -381,6 +396,7 @@ class OrderUseCaseTest {
         Mockito.verify(orderPersistencePort, Mockito.times(1)).updateOrderStatus(order);
         assertEquals(order.getSecurityCode(), securityCode);
         assertEquals("Delivered", order.getStatus());
+        Mockito.verify(traceabilityServicePort, Mockito.times(1)).updateTraceability(any(), any(), any(), any(), any(), any());
     }
 
     @Test
@@ -471,6 +487,7 @@ class OrderUseCaseTest {
         Mockito.verify(orderPersistencePort, Mockito.times(1)).findOrderById(orderId);
         Mockito.verify(orderPersistencePort, Mockito.times(1)).updateOrderStatus(order);
         assertEquals("Canceled", order.getStatus());
+        Mockito.verify(traceabilityServicePort, Mockito.times(1)).updateTraceability(any(), any(), any(), any(), any(), any());
     }
 
     @Test
