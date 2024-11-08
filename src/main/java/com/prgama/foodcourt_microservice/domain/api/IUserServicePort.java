@@ -4,4 +4,5 @@ public interface IUserServicePort {
     boolean getUserById(Long id);
     Long getEmployeesRestaurant(Long employeeId);
     String getClientsPhoneNumber(Long clientId);
+    String getUsersEmail(Long userId);
 }

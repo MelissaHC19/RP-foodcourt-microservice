@@ -32,6 +32,7 @@ public class BeanConfiguration {
     private final IOrderEntityMapper orderEntityMapper;
     private final IOrderRepository orderRepository;
     private final IOrderPageMapper orderPageMapper;
+    private final ITraceabilityServicePort traceabilityServicePort;
 
     @Bean
     public IRestaurantPersistencePort restaurantPersistencePort() {
@@ -75,6 +76,6 @@ public class BeanConfiguration {
 
     @Bean
     public IOrderServicePort orderServicePort() {
-        return new OrderUseCase(restaurantPersistencePort(), orderPersistencePort(), dishPersistencePort(), userServicePort, messageServicePort);
+        return new OrderUseCase(restaurantPersistencePort(), orderPersistencePort(), dishPersistencePort(), userServicePort, messageServicePort, traceabilityServicePort);
     }
 }

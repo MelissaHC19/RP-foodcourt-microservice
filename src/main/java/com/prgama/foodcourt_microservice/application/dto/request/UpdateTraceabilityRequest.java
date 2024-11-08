@@ -1,0 +1,20 @@
+package com.prgama.foodcourt_microservice.application.dto.request;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class UpdateTraceabilityRequest {
+    private LocalDateTime finalTime;
+    private List<CreateStatusLogRequest> statusLogs;
+    private Long employeeId;
+    private String employeeEmail;
+}

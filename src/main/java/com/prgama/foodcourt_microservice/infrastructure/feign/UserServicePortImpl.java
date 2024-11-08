@@ -3,6 +3,7 @@ package com.prgama.foodcourt_microservice.infrastructure.feign;
 import com.prgama.foodcourt_microservice.application.dto.request.GetClientsPhoneNumberRequest;
 import com.prgama.foodcourt_microservice.application.dto.request.GetEmployeesRestaurantRequest;
 import com.prgama.foodcourt_microservice.application.dto.request.GetUserRequest;
+import com.prgama.foodcourt_microservice.application.dto.request.GetUsersEmailRequest;
 import com.prgama.foodcourt_microservice.domain.api.IUserServicePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,11 @@ public class UserServicePortImpl implements IUserServicePort {
     public String getClientsPhoneNumber(Long clientId) {
         GetClientsPhoneNumberRequest clientsPhoneNumberRequest = userFeign.getClientsPhoneNumber(clientId);
         return clientsPhoneNumberRequest.getPhoneNumber();
+    }
+
+    @Override
+    public String getUsersEmail(Long userId) {
+        GetUsersEmailRequest usersEmailRequest = userFeign.getUsersEmail(userId);
+        return usersEmailRequest.getEmail();
     }
 }
