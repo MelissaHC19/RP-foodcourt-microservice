@@ -178,4 +178,30 @@ class RestaurantUseCaseTest {
         assertFalse(result);
         Mockito.verify(restaurantPersistencePort, Mockito.times(1)).getRestaurant(restaurantId);
     }
+
+    @Test
+    @DisplayName("Returns restaurant's owner id when restaurant exists")
+    void getRestaurantsOwner() {
+        Long restaurantId = 1L;
+        Long expectedOwnerId = 2L;
+        Restaurant restaurant = new Restaurant(1L, null, null, null, null, null, 2L);
+        Mockito.when(restaurantPersistencePort.getRestaurant(restaurantId)).thenReturn(restaurant);
+
+        Long ownerId = restaurantUseCase.getRestaurantsOwner(restaurantId);
+
+        assertEquals(expectedOwnerId, ownerId);
+        Mockito.verify(restaurantPersistencePort, Mockito.times(1)).getRestaurant(restaurantId);
+    }
+
+    @Test
+    @DisplayName("Returns 0L when restaurant not found or doesn't exists")
+    void getRestaurantsOwnerReturns0LWhenRestaurantNotFound() {
+        Long restaurantId = 1L;
+        Mockito.when(restaurantPersistencePort.getRestaurant(restaurantId)).thenReturn(null);
+
+        Long ownerId = restaurantUseCase.getRestaurantsOwner(restaurantId);
+
+        assertEquals(0L, ownerId);
+        Mockito.verify(restaurantPersistencePort, Mockito.times(1)).getRestaurant(restaurantId);
+    }
 }

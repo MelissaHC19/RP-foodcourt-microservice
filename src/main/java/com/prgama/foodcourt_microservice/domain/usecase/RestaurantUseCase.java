@@ -39,6 +39,15 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         } else return ownerId == restaurant.getOwnerId();
     }
 
+    @Override
+    public Long getRestaurantsOwner(Long restaurantId) {
+        Restaurant restaurant = restaurantPersistencePort.getRestaurant(restaurantId);
+        if (restaurant == null) {
+            return 0L;
+        }
+        return restaurant.getOwnerId();
+    }
+
     private void validateRestaurant(Restaurant restaurant) {
         if (restaurantPersistencePort.alreadyExistsByNit(restaurant.getNit())) {
             throw new AlreadyExistsByNitException(ExceptionConstants.ALREADY_EXISTS_BY_NIT_MESSAGE);

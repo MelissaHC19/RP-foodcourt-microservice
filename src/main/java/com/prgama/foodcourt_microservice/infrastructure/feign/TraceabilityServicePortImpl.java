@@ -17,11 +17,11 @@ public class TraceabilityServicePortImpl implements ITraceabilityServicePort {
     private final ITraceabilityFeign traceabilityFeign;
 
     @Override
-    public void createTraceability(Long orderId, Long clientId, String clientEmail, LocalDateTime initialTime, String newStatus) {
+    public void createTraceability(Long orderId, Long clientId, String clientEmail, LocalDateTime initialTime, String newStatus, Long restaurantId) {
         CreateStatusLogRequest createStatusLogRequest = new CreateStatusLogRequest(null, newStatus, initialTime);
         List<CreateStatusLogRequest> createStatusLogRequests = new ArrayList<>();
         createStatusLogRequests.add(createStatusLogRequest);
-        CreateTraceabilityRequest request = new CreateTraceabilityRequest(orderId, clientId, clientEmail, initialTime, createStatusLogRequests);
+        CreateTraceabilityRequest request = new CreateTraceabilityRequest(orderId, clientId, clientEmail, initialTime, createStatusLogRequests, restaurantId);
         traceabilityFeign.createTraceability(request);
     }
 

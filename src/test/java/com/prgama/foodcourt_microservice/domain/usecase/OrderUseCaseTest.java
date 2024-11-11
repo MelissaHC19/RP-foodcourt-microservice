@@ -72,7 +72,7 @@ class OrderUseCaseTest {
         Mockito.verify(dishPersistencePort, Mockito.times(1)).findById(1L);
         Mockito.verify(orderPersistencePort, Mockito.times(1)).createOrder(order);
         Mockito.verify(userServicePort, Mockito.times(1)).getUsersEmail(order.getClientId());
-        Mockito.verify(traceabilityServicePort, Mockito.times(1)).createTraceability(any(), any(), any(), any(), any());
+        Mockito.verify(traceabilityServicePort, Mockito.times(1)).createTraceability(any(), any(), any(), any(), any(), any());
     }
 
     @Test
