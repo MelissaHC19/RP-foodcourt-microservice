@@ -7,4 +7,5 @@ public interface IRestaurantServicePort {
     void createRestaurant(Restaurant restaurant);
     Pagination<Restaurant> listRestaurants(Integer pageNumber, Integer pageSize, String sortDirection);
     boolean getRestaurantById(Long restaurantId, Long ownerId);
+    Long getRestaurantsOwner(Long restaurantId);
 }

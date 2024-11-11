@@ -41,6 +41,9 @@ public class DocumentationConstants {
     public static final String CANCEL_ORDER_SUMMARY = "Order canceled successfully";
     public static final String CANCEL_ORDER_DESCRIPTION = "This endpoint allows a client cancel an order only if it's still in Pending status.";
 
+    public static final String GET_RESTAURANTS_OWNER_SUMMARY = "Get restaurant's owner id";
+    public static final String GET_RESTAURANTS_OWNER_DESCRIPTION = "This endpoint returns the restaurant's owner id for order traceability.";
+
     public static final String RESTAURANT_TAG = "Restaurant";
     public static final String DISH_TAG = "Dish";
     public static final String ORDER_TAG = "Order";
@@ -94,6 +97,8 @@ public class DocumentationConstants {
 
     public static final String OK_RESPONSE_CODE_DESCRIPTION_CANCELED = "Order canceled successfully.";
     public static final String CONFLICT_RESPONSE_CODE_DESCRIPTION_CANCELED = "Order already being prepared and can't be canceled.";
+
+    public static final String OK_RESPONSE_CODE_DESCRIPTION_TRACEABILITY = "The request was successful, and the restaurant's owner id is returned.";
 
     public static final String PAGE_NUMBER_PARAMETER = "Page number to retrieve (starting from 0)";
     public static final String PAGE_SIZE_PARAMETER_RESTAURANTS = "Number of restaurants per page";

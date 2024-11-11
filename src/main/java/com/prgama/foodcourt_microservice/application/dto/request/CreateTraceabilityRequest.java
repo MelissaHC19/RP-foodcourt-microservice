@@ -18,4 +18,5 @@ public class CreateTraceabilityRequest {
     private String clientEmail;
     private LocalDateTime initialTime;
     private List<CreateStatusLogRequest> statusLogs;
+    private Long restaurantId;
 }

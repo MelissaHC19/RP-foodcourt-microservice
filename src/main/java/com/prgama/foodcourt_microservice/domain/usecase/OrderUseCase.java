@@ -51,7 +51,7 @@ public class OrderUseCase implements IOrderServicePort {
         Order dbOrder = orderPersistencePort.createOrder(order);
         String clientEmail = userServicePort.getUsersEmail(clientId);
         LocalDateTime initialTime = LocalDateTime.now();
-        traceabilityServicePort.createTraceability(dbOrder.getId(), order.getClientId(), clientEmail, initialTime, order.getStatus());
+        traceabilityServicePort.createTraceability(dbOrder.getId(), order.getClientId(), clientEmail, initialTime, order.getStatus(), order.getRestaurant().getId());
     }
 
     @Override

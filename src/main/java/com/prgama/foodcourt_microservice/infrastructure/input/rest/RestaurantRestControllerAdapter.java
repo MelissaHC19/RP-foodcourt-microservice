@@ -1,10 +1,7 @@
 package com.prgama.foodcourt_microservice.infrastructure.input.rest;
 
 import com.prgama.foodcourt_microservice.application.dto.request.CreateRestaurantRequest;
-import com.prgama.foodcourt_microservice.application.dto.response.ControllerResponse;
-import com.prgama.foodcourt_microservice.application.dto.response.GetRestaurantResponse;
-import com.prgama.foodcourt_microservice.application.dto.response.ListRestaurantsResponse;
-import com.prgama.foodcourt_microservice.application.dto.response.PaginationResponse;
+import com.prgama.foodcourt_microservice.application.dto.response.*;
 import com.prgama.foodcourt_microservice.application.handler.IAuthenticationHandler;
 import com.prgama.foodcourt_microservice.application.handler.IRestaurantHandler;
 import com.prgama.foodcourt_microservice.infrastructure.constants.ControllerConstants;
@@ -100,5 +97,19 @@ public class RestaurantRestControllerAdapter {
     @GetMapping("/{id}/{ownerId}")
     public ResponseEntity<GetRestaurantResponse> getRestaurantById(@PathVariable Long id, @PathVariable Long ownerId) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantHandler.getRestaurantById(id, ownerId));
+    }
+
+    @Operation(summary = DocumentationConstants.GET_RESTAURANTS_OWNER_SUMMARY,
+            tags = {DocumentationConstants.RESTAURANT_TAG},
+            description = DocumentationConstants.GET_RESTAURANTS_OWNER_DESCRIPTION
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = DocumentationConstants.OK_STATUS_CODE,
+                    description = DocumentationConstants.OK_RESPONSE_CODE_DESCRIPTION_TRACEABILITY,
+                    content = @Content),
+    })
+    @GetMapping("/{restaurantId}")
+    public ResponseEntity<GetRestaurantsOwnerResponse> getRestaurantsOwner(@PathVariable Long restaurantId){
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantHandler.getRestaurantsOwner(restaurantId));
     }
 }

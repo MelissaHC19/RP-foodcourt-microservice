@@ -2,6 +2,7 @@ package com.prgama.foodcourt_microservice.application.handler;
 
 import com.prgama.foodcourt_microservice.application.dto.request.CreateRestaurantRequest;
 import com.prgama.foodcourt_microservice.application.dto.response.GetRestaurantResponse;
+import com.prgama.foodcourt_microservice.application.dto.response.GetRestaurantsOwnerResponse;
 import com.prgama.foodcourt_microservice.application.dto.response.ListRestaurantsResponse;
 import com.prgama.foodcourt_microservice.application.dto.response.PaginationResponse;
 import com.prgama.foodcourt_microservice.application.mapper.ICreateRestaurantRequestMapper;
@@ -36,5 +37,10 @@ public class RestaurantHandler implements IRestaurantHandler {
     @Override
     public GetRestaurantResponse getRestaurantById(Long restaurantId, Long ownerId) {
         return new GetRestaurantResponse(restaurantServicePort.getRestaurantById(restaurantId, ownerId));
+    }
+
+    @Override
+    public GetRestaurantsOwnerResponse getRestaurantsOwner(Long restaurantId) {
+        return new GetRestaurantsOwnerResponse(restaurantServicePort.getRestaurantsOwner(restaurantId));
     }
 }
